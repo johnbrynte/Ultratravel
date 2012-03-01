@@ -1,0 +1,120 @@
+@font-face {
+	font-family: Code;
+	src: local("Code"), url("CODE Bold.otf");
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: Geosans;
+	src: local("Geosans"), url("GeosansLight.ttf");
+	font-weight: normal;
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	background-color: #cfe7e1;
+	font-family: "Geosans";
+	overflow: hidden;
+}
+
+h1 {
+	color: #13d780;
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+}
+
+p input {
+	float: right;
+	width: 360px;
+	margin: 0px 20px 0px 0px;
+}
+
+#menu {
+	width: 100%;
+	height: 150px;
+	background: url("ultratravel_bg.png");
+}
+
+#earth {
+	width: 200px;
+}
+
+#login {
+	width: 200px;
+	margin-right: 30px;
+	position: absolute;
+	float: right;
+}
+
+#login h2 {
+	font-size: 1.2em;
+	color: #666;
+}
+
+#login p {
+	font-size: 1.2em;
+	color: #000;
+}
+
+#content {
+	margin: 0 auto;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+#map_canvas {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	z-index: -2;
+}
+
+#booking {
+	background-color: #FFFFFF;
+	border: 1px solid #AAAAAA;
+	border-radius: 5px;
+	margin: 40px 0px 0px 120px;
+	position: absolute;
+	top: 0px;
+	width: 500px;
+	box-shadow: -10px 10px 20px #aaa;
+}
+.section {
+	overflow: hidden;
+	position: relative;
+	top: 0;
+	margin: -1px;
+	padding: 0px;
+}
+.section h1 {
+	background: none repeat scroll 0 0 #ffa439;
+	height: 33px;
+	border: 1px solid #AAAAAA;
+	border-radius: 5px;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-size: 1.6em;
+	margin: 0px;
+	padding-left: 10px;
+}
+
+
+.active_section {
+	cursor: default !important;
+}
+
+.section h2 {
+	font-size: 1.4em;
+	color: 666;
+	margin-left: 20px;
+	-webkit-margin-before: 15px;
+	-webkit-margin-after: 5px;
+}
+
+.section p {
+	font-size: 1.2em;
+	margin: 0px 20px 30px 30px;
+}
