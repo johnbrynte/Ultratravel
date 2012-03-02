@@ -58,6 +58,14 @@ p input {
 	color: #000;
 }
 
+#login_popup {
+   margin-top: 10px;
+}
+
+#loginbutton {
+   margin-top: 5px;
+}
+
 #content {
 	margin: 0 auto;
 	position: relative;

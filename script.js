@@ -12,6 +12,11 @@ var geocoder;
 var line;
 var markers = [];
 
+var saveFunc;
+var loadFunc;
+
+var ultratravelUserData;
+
 $(document).ready(function() {
 		      $(".date").dateinput({
 					       format: 'dddd dd, mmmm yyyy',	// the format displayed for the user
@@ -77,7 +82,41 @@ $(document).ready(function() {
 					       });
 
 		      document.getElementById("fromaddress").focus();
+
+		      // Login	  
+		      if (typeof(Storage)!=="undefined") {
+			  saveFunc = saveDataLocal;
+			  loadFunc = loadDataLocal;
+		      } else {
+			  saveFunc = saveDataCookie;
+		      }
+
+		      loadFunc();
+
+		      if (ultratravelUserData && ultratravelUserData.loggedin) {
+			  writeLoginInfo();
+		      } else {
+			  $('#login').append('<div id="login_popup">'
+					     + '<form>'
+					     + '<label>Anv&auml;ndarnamn: <input id="login_username" type="text" /></label>'
+					     + '<label>L&ouml;senord: <input id="login_password" type="password" /></label>'
+					     + '<input id="loginbutton" type="submit" value="Logga in">'
+					     + '</form>'
+					     + '</div>');
+
+			  // What happens when we click login?
+			  $('#loginbutton').click(function(){
+						      ultratravelUserData = new UserData();
+						      ultratravelUserData.loggedin = true;
+						      ultratravelUserData.username = $('#login_username').val();
+						      ultratravelUserData.password = $('#login_password').val();
+					
+						      $('#login_popup').remove();
+						      writeLoginInfo();
+						  });
+		      }
 		  });
+
 
 function codeAddress(index,address) {
     geocoder.geocode( { 'address': address}, function(results, status) {
