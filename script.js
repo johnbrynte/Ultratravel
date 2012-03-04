@@ -23,31 +23,17 @@ $(document).ready(function() {
 		      var sectionHeaders = $(".section > h1");
 		      sectionHeaders.first().addClass("active_section");
 
-		      sectionHeaders.click(function() {
-					       if ($(this).parent().height() > minimized) { 
-						   return;
-					       }
-
-					       $(".active_section").removeClass("active_section");
-					       $(this).addClass("active_section");
-
-					       var collapse = {};
-					       collapse["height"] = minimized;
-					       $("#booking > .section:not(this:parent)").animate(collapse, 300, null);
-
-					       var parameters = {};
-					       parameters["height"] = maximized;
-					       $(this).parent().animate(parameters, 200, null);
-
-					       // Hide calendar
-					       $("#calendarDiv").css("display", "none");
-					   });
+		sectionHeaders.click(function() {
+			gotoSection($(".section").index($(this).parent())+1);
+		});
 
 		      // CALENDAR
 		      var today = new Date();
+		      var month = today.getMonth();
+		      var date = today.getDate();
 		      var string = today.getFullYear()+"/"+
-			  ((today.getMonth()<9)?"0"+(today.getMonth()+1):today.getMonth()+1)+"/"+
-			  ((today.getDate()<10)?"0"+today.getDate():today.getDate())+" 13:37";
+			  ((month<9)?"0"+(month+1):month+1)+"/"+
+			  ((date<10)?"0"+date:date)+" 13:37";
 		      document.forms[0].arrival.value = string;
 		      document.forms[0].departure.value = string;
 		      
@@ -162,4 +148,25 @@ function codeAddress(index,address) {
 			      alert("Geocode was not successful for the following reason: " + status);
 			  }
 		      });
+}
+
+function gotoSection(section) {
+	var $link = $(".section:nth-child("+section+")");
+	if ($link.height() > minimized) { 
+		return;
+	}
+
+	$(".active_section").removeClass("active_section");
+	$link.children(":first").addClass("active_section");
+
+	var expand = {};
+	expand["height"] = maximized;
+	$link.animate(expand, 300, null);
+
+	var collapse = {};
+	collapse["height"] = minimized;
+	$(".section").not($link).animate(collapse, 300, null);
+
+	// Hide calendar
+	$("#calendarDiv").css("display", "none");
 }
