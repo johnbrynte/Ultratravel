@@ -71,6 +71,9 @@ h1 {
 
 #loginbutton {
    margin-top: 5px;
+   width: 100px;
+   height: 1.5em;
+   float: left;
 }
 
 #content {

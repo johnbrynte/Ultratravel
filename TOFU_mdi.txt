@@ -1,17 +1,11 @@
-* styr maps från "egna kontroller"
-	CHECK!!!
-* forms
-	CHECK!!!
-* reseplanerare? 
+* DONE styr maps från "egna kontroller"
+* DONE forms
+* DONE quad curves
+* DONE kalender
+* TODO login
+** måste kunna spara info
 
-* quad curves
-
-* kalender
-
-* google login
-
-* "friend invites"
-
-* egna markers!!!!!11!1!
-
-* Väder
+* TODO reseplanerare? 
+* TODO "friend invites"
+* TODO egna markers!!!!!11!1!
+* TODO Väder

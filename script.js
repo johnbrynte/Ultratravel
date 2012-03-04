@@ -104,7 +104,7 @@ $(document).ready(function() {
 					     + '<form>'
 					     + '<p>Anv&auml;ndarnamn: <input id="login_username" type="text" /></p>'
 					     + '<p>L&ouml;senord: <input id="login_password" type="password" /></p>'
-					     + '<input id="loginbutton" type="submit" value="Logga in">'
+					     + '<input id="loginbutton" type="button" value="Logga in">'
 					     + '</form>'
 					     + '</div>');
 			  
@@ -113,8 +113,17 @@ $(document).ready(function() {
 						      ultratravelUserData.loggedin = true;
 						      ultratravelUserData.username = $('#login_username').val();
 						      ultratravelUserData.password = $('#login_password').val();
+						      if (ultratravelUserData.username === '' || ultratravelUserData.password === '') { 
+							  alert('Var vänlig fyll i användarnamn och lösenord.');
+							  return;
+						      }
 						      
 						      $('#login_popup').remove();
+						      $('#login').append('<div id="login_menu">'
+									 + '<input id="saveUser" type="button" value="Spara" />'
+									 + '<input id="forgetUser" type="button" value="Glöm" />'
+									 + '</div>');
+						      
 						      writeLoginInfo();
 						  });
 		      }
