@@ -82,7 +82,6 @@ $(document).ready(function() {
 			       });
 
       document.getElementById("fromaddress").focus();
-  });
 
 		      $(".date").dateinput({
 					       format: 'dddd dd, mmmm yyyy',	// the format displayed for the user
