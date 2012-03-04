@@ -12,7 +12,13 @@ var geocoder;
 var line;
 var markers = [];
 
+var saveFunc;
+var loadFunc;
+
+var ultratravelUserData;
+
 $(document).ready(function() {
+<<<<<<< HEAD
 	$(".section").height(minimized);
 	$("#booking .section:first-child").height(maximized);
 	var sectionHeaders = $(".section > h1");
@@ -79,6 +85,107 @@ $(document).ready(function() {
 
       document.getElementById("fromaddress").focus();
   });
+=======
+		      $(".date").dateinput({
+					       format: 'dddd dd, mmmm yyyy',	// the format displayed for the user
+					       selectors: true,             	// whether month/year dropdowns are shown
+					       min: 0,                    // min selectable day (100 days backwards)
+					       max: 1000,                    	// max selectable day (100 days onwards)
+					       offset: [10, 20],            	// tweak the position of the calendar
+					       speed: 'fast',               	// calendar reveal speed
+					       firstDay: 1                  	// which day starts a week. 0 = sunday, 1 = monday etc..
+					   });
+		      $(".section").height(minimized);
+		      $("#booking .section:first-child").height(maximized);
+		      var sectionHeaders = $(".section > h1");
+		      sectionHeaders.first().addClass("active_section");
+
+		      sectionHeaders.click(function() {
+					       if ($(this).parent().height() > minimized) 
+						   return;
+					       
+					       $(".active_section").removeClass("active_section");
+					       $(this).addClass("active_section");
+
+
+					       var collapse = {};
+					       collapse["height"] = minimized;
+					       $("#booking > .section:not(this:parent)").animate(collapse, 300, null);
+
+					       var parameters = {};
+					       parameters["height"] = maximized;
+					       $(this).parent().animate(parameters, 200, null);
+					   });
+
+
+		      // GOOGLE MAPZ
+		      var myOptions = {
+			  disableDefaultUI: true,
+			  scrollwheel: false,
+			  center: new google.maps.LatLng(50, 0),
+			  zoom: 3,
+			  mapTypeId: google.maps.MapTypeId.ROADMAP,
+			  styles: [{
+				       featureType: "all",
+				       stylers: [
+					   { saturation: -100 }
+				       ]
+				   }]
+		      };
+		      
+		      map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+		      geocoder = new google.maps.Geocoder();
+
+		      $("#fromaddress").keypress(function(event) {
+						     if(event.which == 13) {
+							 codeAddress(0, $(this).attr("value"));
+						     }
+						 });
+
+		      $("#toaddress").keypress(function(event) {
+						   if(event.which == 13) {
+						       codeAddress(1, $(this).attr("value"));
+						   }
+					       });
+
+		      document.getElementById("fromaddress").focus();
+
+		      // Login	  
+		      if (typeof(Storage)!=="undefined") {
+			  saveFunc = saveDataLocal;
+			  loadFunc = loadDataLocal;
+		      } else {
+			  saveFunc = saveDataCookie;
+		      }
+
+		      loadFunc();
+
+		      if (ultratravelUserData && ultratravelUserData.loggedin) {
+			  writeLoginInfo();
+		      } else {
+			  $('#login').append('<div id="login_popup">'
+					     + '<form>'
+					     + '<label>Anv&auml;ndarnamn: <input id="login_username" type="text" /></label>'
+					     + '<label>L&ouml;senord: <input id="login_password" type="password" /></label>'
+					     + '<input id="loginbutton" type="submit" value="Logga in">'
+					     + '</form>'
+					     + '</div>');
+
+			  // What happens when we click login?
+			  $('#loginbutton').click(function(){
+						      ultratravelUserData = new UserData();
+						      ultratravelUserData.loggedin = true;
+						      ultratravelUserData.username = $('#login_username').val();
+						      ultratravelUserData.password = $('#login_password').val();
+					
+						      $('#login_popup').remove();
+						      writeLoginInfo();
+						  });
+		      }
+		  });
+>>>>>>> a2d2114aa753ff3aaed7e252831910143017fc22
+
 
 function codeAddress(index,address) {
     geocoder.geocode( { 'address': address}, function(results, status) {

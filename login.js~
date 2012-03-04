@@ -1,0 +1,5 @@
+var login = {
+    isLoggedin: false,
+    username: "",
+    password: "",
+};
