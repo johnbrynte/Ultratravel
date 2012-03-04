@@ -1,3 +1,4 @@
+
 //document.write("<h2>"+flight()+"</h2>");
 
 function main() {

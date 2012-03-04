@@ -1,12 +1,15 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
 <link href="ultrastyle.css" rel="stylesheet" type="text/css" />
 <link href="normalize.css" rel="stylesheet" type="text/css" />
+<link type="text/css" rel="stylesheet" href="dhtmlgoodies_calendar/dhtmlgoodies_calendar.css?" media="screen"></LINK>
+<SCRIPT type="text/javascript" src="dhtmlgoodies_calendar/dhtmlgoodies_calendar.js?"></script>
 <script src="http://code.jquery.com/jquery-1.7.js" type="text/javascript">
 </script>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyB56g-mbdIen-j9jhHmAPXTS7ideqnbCn8&sensor=true"></script>
-<script type="text/javascript" src="jquery.tools.min.js"></script>
+<script type="text/javascript" src="flightgen.js"></script>
 <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
@@ -27,15 +30,16 @@
 	<div id="booking">
 		<div class="section">
 		<h1>Destination</h1>
-		<h2>Header 1</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur accumsan condimentum fringilla. Phasellus id mi in velit posuere vulputate. Morbi enim tellus, semper at bibendum id, tristique quis erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac.</p>
-		<p>Fr&aring;n:
+		<form>
+		<p>Från:
 		<input id="fromaddress" type="text" value="Stockholm" /></p>
 		<p>Till:
 		<input id="toaddress" type="text" value="Las Vegas" /></p>
-		<input class="date" type="date" name="departure" value="Today" />
-		<input class="date" type="date" name="arrival" data-value="7"
-		value="After one week" />
+		<p>Tid för ankomst:
+		<input type="button" name="arrival" onclick="displayCalendar(document.forms[0].arrival,'yyyy/mm/dd hh:ii',this,true)" /></p>
+		<p>Tid för hemresa:
+		<input type="button" name="departure" onclick="displayCalendar(document.forms[0].departure,'yyyy/mm/dd hh:ii',this,true)" /></p>
+		</form>
 		</div>
 
 		<div class="section">
