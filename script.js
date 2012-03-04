@@ -87,11 +87,9 @@ $(document).ready(function() {
 			  writeLoginInfo();
 		      } else {
 			  $('#login').append('<div id="login_popup">'
-					     + '<form>'
 					     + '<p>Anv&auml;ndarnamn: <input id="login_username" type="text" /></p>'
 					     + '<p>L&ouml;senord: <input id="login_password" type="password" /></p>'
 					     + '<input id="loginbutton" type="button" value="Logga in">'
-					     + '</form>'
 					     + '</div>');
 			  
 			  $('#loginbutton').click(function() {
