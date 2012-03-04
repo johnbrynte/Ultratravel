@@ -10,11 +10,17 @@
 	font-weight: normal;
 }
 
+@font-face {
+	font-family: Istok;
+	src: local("Istok"), url("Istok-Regular.ttf");
+	font-weight: normal;
+}
+
 body {
 	height: 100%;
 	margin: 0;
 	background-color: #cfe7e1;
-	font-family: "Geosans";
+	font-family: "Istok";
 	overflow: hidden;
 }
 
@@ -22,18 +28,6 @@ h1 {
 	color: #13d780;
 	-webkit-margin-before: 0;
 	-webkit-margin-after: 0;
-}
-
-#booking [type = text] {
-	float: right;
-	width: 360px;
-	margin: 0px 20px 0px 0px;
-}
-
-#booking [type = button] {
-	float: right;
-	width: 205px;
-	margin: 0px 20px 0px 0px;
 }
 
 #menu {
@@ -105,6 +99,17 @@ h1 {
 	width: 500px;
 	box-shadow: -10px 10px 20px #aaa;
 }
+
+#booking [type = text] {
+	float: right;
+	width: 360px;
+}
+
+#booking [type = button] {
+	float: right;
+	width: 205px;
+}
+
 .section {
 	overflow: hidden;
 	position: relative;
@@ -112,6 +117,7 @@ h1 {
 	margin: -1px;
 	padding: 0px;
 }
+
 .section h1 {
 	background: none repeat scroll 0 0 #ffa439;
 	height: 33px;
@@ -139,16 +145,34 @@ h1 {
 
 .section p {
 	font-size: 1.2em;
-	margin: 0px 20px 30px 30px;
+	margin: 0px 30px 20px 30px;
 }
 
 .linktosection {
 	font-weight: bold;
 	text-decoration: underline;
 	color: #666;
+	cursor: pointer;
 }
 
-.linktosection : hover {
-	color: #f00;
+#flights p {
+	font-size: 1em;
+	margin: 0px 20px 10px 30px;
+}
+
+.flight {
+	width: 440px;
+	padding: 5px;
+	border: 1px solid #ccc;
 	cursor: pointer;
+}
+
+.flight:hover {
+	background: #aaa;
+}
+
+.nextbutton {
+	width:	80px !important;
+	margin: 10px 30px 10px 20px !important;
+	float: right !important;
 }

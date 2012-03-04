@@ -5,7 +5,7 @@
  */
 
 var minimized = 35;
-var maximized = 400;
+var maximized = 450;
 
 var map;
 var geocoder;
@@ -152,23 +152,44 @@ function codeAddress(index,address) {
 		      });
 }
 
-function gotoSection(section) {
-	var $link = $(".section:nth-child("+section+")");
-	if ($link.height() > minimized) { 
+function gotoSection(number) {
+	var $section = $(".section:nth-child("+number+")");
+	if ($section.height() > minimized) { 
 		return;
 	}
 
+	// if the flight section is selected
+	if(number == 2)
+	    createFlights();
+
 	$(".active_section").removeClass("active_section");
-	$link.children(":first").addClass("active_section");
+	$section.children(":first").addClass("active_section");
 
 	var expand = {};
 	expand["height"] = maximized;
-	$link.animate(expand, 300, null);
+	$section.animate(expand, 300, null);
 
 	var collapse = {};
 	collapse["height"] = minimized;
-	$(".section").not($link).animate(collapse, 300, null);
+	$(".section").not($section).animate(collapse, 300, null);
 
 	// Hide calendar
 	$("#calendarDiv").css("display", "none");
+}
+
+function createFlights() {
+	var from = $("#fromaddress").val();
+	var to = $("#toaddress").val();
+	var $flights = $("#flights");
+
+	$flights.html("");
+
+	if(from == "" || to == "") {
+		$flights.append('<p>Välj avgångsort och resmål under sektionen <span class="linktosection" onclick="gotoSection(1)">Destination</span></p>');
+	} else {
+		$flights.append('<p>Flights från <b>'+from+'</b> till <b>'+to+'</b></p>');
+		for(i = 0; i < 3; i ++) {
+			$flights.append('<p class="flight">'+flight()+'</p>');
+		}
+	}
 }

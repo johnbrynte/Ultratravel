@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+<title>ULTRATRAVEL</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
 <link href="ultrastyle.css" rel="stylesheet" type="text/css" />
 <link href="normalize.css" rel="stylesheet" type="text/css" />
@@ -39,11 +40,15 @@
 		<p>Tid för hemresa:
 		<input type="button" name="departure" onclick="displayCalendar(document.forms[1].departure,'yyyy/mm/dd hh:ii',this,true)" /></p>
 		</form>
+		<input class="nextbutton" type="button" value="nästa" onclick="gotoSection(2)" />
 		</div>
 
 		<div class="section">
 		<h1>Flights</h1>
+		<div id="flights">
 		<p>Välj avgångsort och resmål under sektionen <span class="linktosection" onclick="gotoSection(1)">Destination</span></p>
+		</div>
+		<input class="nextbutton" type="button" value="nästa" onclick="gotoSection(3)" />
 		</div>
 
 		<div class="section">
