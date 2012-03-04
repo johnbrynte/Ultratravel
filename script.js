@@ -18,7 +18,6 @@ var loadFunc;
 var ultratravelUserData;
 
 $(document).ready(function() {
-<<<<<<< HEAD
 	$(".section").height(minimized);
 	$("#booking .section:first-child").height(maximized);
 	var sectionHeaders = $(".section > h1");
@@ -30,7 +29,6 @@ $(document).ready(function() {
 
 		$(".active_section").removeClass("active_section");
 		$(this).addClass("active_section");
-
 
 		var collapse = {};
 		collapse["height"] = minimized;
@@ -85,7 +83,7 @@ $(document).ready(function() {
 
       document.getElementById("fromaddress").focus();
   });
-=======
+
 		      $(".date").dateinput({
 					       format: 'dddd dd, mmmm yyyy',	// the format displayed for the user
 					       selectors: true,             	// whether month/year dropdowns are shown
@@ -184,7 +182,7 @@ $(document).ready(function() {
 						  });
 		      }
 		  });
->>>>>>> a2d2114aa753ff3aaed7e252831910143017fc22
+//>>>>>>> a2d2114aa753ff3aaed7e252831910143017fc22
 
 
 function codeAddress(index,address) {
