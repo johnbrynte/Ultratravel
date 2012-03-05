@@ -2,7 +2,7 @@
 //document.write("<h2>"+flight()+"</h2>");
 
 function main() {
-
+    alert("HAHAHAHAHA!");
 }
 
 /** Returns the whole shit as a string */
