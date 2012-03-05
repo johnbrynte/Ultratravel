@@ -17,8 +17,8 @@ var markers = [];
 var saveFunc;
 var loadFunc;
 
-var okColor = "#67cb48";
-var todoColor = "#f84426";
+var okColor = "#37d2ac";
+var todoColor = "#ff8973";
 
 var ultratravelUserData;
 
@@ -30,7 +30,8 @@ $(document).ready(function() {
         ((month<9)?"0"+(month+1):month+1)+"/"+
         ((date<10)?"0"+date:date)+" 13:37";
     var sectionHeaders = $(".section > h1");
-      // GOOGLE MAPZ
+
+    // GOOGLE MAPZ
     var myOptions = {
         disableDefaultUI: true,
         scrollwheel: false,
@@ -40,7 +41,8 @@ $(document).ready(function() {
         styles: [{
             featureType: "all",
             stylers: [
-            { saturation: -100 }
+                { hue: "#ffc890" },
+                {  lightness: "25" }
             ]
         }]
     };
@@ -145,8 +147,7 @@ function codeAddress(index,address) {
             if (markers[index]) {
                 markers[index].setMap(null);
             }
-              
-              
+
             markers[index] = new google.maps.Marker({
                 map: map,
                 position: results[0].geometry.location,
@@ -164,7 +165,7 @@ function codeAddress(index,address) {
             line = new google.maps.Polyline({
                 map: map,
                 path: new google.maps.MVCArray([ p1, p2 ]),
-                strokeColor: "#f00",
+                strokeColor: okColor,
                 geodesic: true
             });
             map.setCenter(google.maps.geometry.spherical.interpolate(p1,p2,0.5));
