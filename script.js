@@ -62,10 +62,6 @@ $(document).ready(function() {
     document.forms[0].arrival.value = todayString;
     document.forms[0].departure.value = todayString;
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-<<<<<<< HEAD
-=======
-
->>>>>>> 27961cad1af8fa0b7f80021864536089372e1923
     geocoder = new google.maps.Geocoder();
 
     // FORM
@@ -118,7 +114,6 @@ $(document).ready(function() {
             + '<span>Anv&auml;ndarnamn: <input id="login_username" type="text" /></span>'
             + '<span>L&ouml;senord: <input id="login_password" type="password" /></span>'
             + '</div>');
-<<<<<<< HEAD
  
         $('#loginbutton').click(function() {
             ultratravelUserData = new UserData();
@@ -137,7 +132,7 @@ $(document).ready(function() {
                     + '</div>');
                
             writeLoginInfo();
-=======
+        });
 
         $('#login_password').keypress(function(evt) {
             if (evt.which === 13) {
@@ -159,7 +154,6 @@ $(document).ready(function() {
 
                 writeLoginInfo();
             }
->>>>>>> 27961cad1af8fa0b7f80021864536089372e1923
         });
     }
 });
