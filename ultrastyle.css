@@ -96,7 +96,7 @@ h1 {
 	background-color: #eaf3ff;
 	border: 1px solid #AAAAAA;
 	border-radius: 5px;
-	margin: 190px 0px 0px 120px;
+	margin: 90px 0px 0px 120px;
 	position: absolute;
 	top: 0px;
 	width: 500px;
@@ -125,16 +125,15 @@ h1 {
 	height: 33px;
 	border: 1px solid #888;
 	border-radius: 5px;
+	cursor: default;
 	color: #FFFFFF;
-	cursor: pointer;
 	font-size: 1.6em;
 	margin: 0px 0px 20px 0px;
 	padding-left: 10px;
 }
 
-
-.active_section {
-	cursor: default !important;
+.enabled:not(.active_section) {
+    cursor: pointer !important;
 }
 
 .section h2 {

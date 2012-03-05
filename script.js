@@ -29,7 +29,7 @@ $(document).ready(function() {
     var todayString = today.getFullYear()+"/"+
         ((month<9)?"0"+(month+1):month+1)+"/"+
         ((date<10)?"0"+date:date)+" 13:37";
-    var sectionHeaders = $(".section > h1");
+    var $sectionHeaders = $(".section > h1");
 
     // GOOGLE MAPZ
     var myOptions = {
@@ -47,20 +47,25 @@ $(document).ready(function() {
         }]
     };
 
-    $(".section").height(minimized);
-    $("#booking .section:first-child").height(maximized);
-    sectionHeaders.first().addClass("active_section");
+    // initialize sections
+    $(".section").not("first-child").height(minimized);
+    $(".section:first-child").height(maximized);
+    $sectionHeaders.first().addClass("active_section");
+    $sectionHeaders.first().addClass("enabled");
 
     // set default section header color
     $(".section > h1").css("background",todoColor);
 
-    sectionHeaders.click(function() {
-        gotoSection($(".section").index($(this).parent())+1);
+    // set the click event handler for each section
+    $sectionHeaders.click(function() {
+        if($(this).is(".enabled")) { // literally, baby!!!
+            gotoSection($(".section").index($(this).parent())+1);
+        }
     });
 
     // CALENDAR
-    document.forms[0].arrival.value = todayString;
-    document.forms[0].departure.value = todayString;
+    $("#arrival").val(todayString);
+    $("#departure").val(todayString)
 
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
@@ -155,31 +160,30 @@ $(document).ready(function() {
 
 function codeAddress(index,address) {
     geocoder.geocode( { 'address': address}, function(results, status) {
-              if (status == google.maps.GeocoderStatus.OK) {
-                  if (markers[index]) {
-                  markers[index].setMap(null);
-                  }
-                  
-                  // Make a nice marker yeah
-                  var markerIcon = new google.maps.MarkerImage('images/marker_mint_s.png',
-                  new google.maps.Size(31,40),      // Size
-                  new google.maps.Point(0,0),       // Origin
-                  new google.maps.Point(16,40));    // Anchor
-                  
-                  var markerShadow = new google.maps.MarkerImage('images/marker_shadow_s.png',
-                  new google.maps.Size(45,31),
-                  new google.maps.Point(0,0),
-                  new google.maps.Point(16,31));
-                 
-                  
-                  markers[index] = new google.maps.Marker({
-                                      map: map,
-                                      position: results[0].geometry.location,
-                                      animation: google.maps.Animation.BOUNCE,
-                                      shadow: markerShadow,
-                                      icon: markerIcon
-                                      });
-                  map.setCenter(results[0].geometry.location);
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (markers[index]) {
+                markers[index].setMap(null);
+            }
+              
+            // Make a nice marker yeah
+            var markerIcon = new google.maps.MarkerImage('images/marker_mint_s.png',
+            new google.maps.Size(31,40),    // Size
+            new google.maps.Point(0,0),    // Origin
+            new google.maps.Point(16,40));    // Anchor
+
+            var markerShadow = new google.maps.MarkerImage('images/marker_shadow_s.png',
+            new google.maps.Size(45,31),
+            new google.maps.Point(0,0),
+            new google.maps.Point(16,31));
+
+            markers[index] = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                animation: google.maps.Animation.BOUNCE,
+                shadow: markerShadow,
+                icon: markerIcon
+            });
+            map.setCenter(results[0].geometry.location);
 
             if (markers[1] && markers[0]) {
             if (line) {
@@ -244,21 +248,24 @@ function createFlights() {
             $flights.append('<p class="flight">'+flight()+'</p>');
         }
         $(".flight").click(function() {
+            $(".flight").not(this).css("background","#fff");
             $(this).css("background","#aaa");
             $secondSection.children(":first").css("background",okColor);
+            $secondSection.next().children(":first").addClass("enabled");
             $secondSection.children(".nextbutton").css("visibility","visible");
         });
     }
 }
 
-// check if enough information is available
 function sectionDestinationChange() {
     var $firstSection = $(".section:nth-child(1)");
     if($("#fromaddress").val() != "" && $("#toaddress").val() != "") {
         $firstSection.children(":first").css("background",okColor);
+        $firstSection.next().children(":first").addClass("enabled");
         $firstSection.children(".nextbutton").css("visibility","visible");
     } else {
-        $(".section:nth-child(1)").children(":first").css("background",todoColor);
+        $firstSection.children(":first").css("background",todoColor);
+        $firstSection.next().children(":first").removeClass("enabled");
         $firstSection.children(".nextbutton").css("visibility","hidden");
     }
 };
