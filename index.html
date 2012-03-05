@@ -32,13 +32,13 @@
 		<h1>Destination</h1>
 		<form>
 		<p>Från:
-		<input id="fromaddress" type="text" value="Stockholm" /></p>
+		<input id="fromaddress" type="text" value="" /></p>
 		<p>Till:
-		<input id="toaddress" type="text" value="Las Vegas" /></p>
+		<input id="toaddress" type="text" value="" /></p>
 		<p>Tid för ankomst:
-		<input type="button" name="arrival" onclick="displayCalendar(document.forms[0].arrival,'yyyy/mm/dd hh:ii',this,true)" /></p>
+		<input id="arrival" type="button" onclick="displayCalendar(document.getElementById('arrival'),'yyyy/mm/dd hh:ii',this,true)" /></p>
 		<p>Tid för hemresa:
-		<input type="button" name="departure" onclick="displayCalendar(document.forms[0].departure,'yyyy/mm/dd hh:ii',this,true)" /></p>
+		<input id="departure" type="button" onclick="displayCalendar(document.getElementById('departure'),'yyyy/mm/dd hh:ii',this,true)" /></p>
 		</form>
 		<input class="nextbutton" type="button" value="nästa" onclick="gotoSection(2)" />
 		</div>

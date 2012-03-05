@@ -15,6 +15,9 @@ var markers = [];
 var saveFunc;
 var loadFunc;
 
+var okColor = "#67cb48";
+var todoColor = "#f84426";
+
 var ultratravelUserData;
 
 $(document).ready(function() {
@@ -22,6 +25,9 @@ $(document).ready(function() {
 		      $("#booking .section:first-child").height(maximized);
 		      var sectionHeaders = $(".section > h1");
 		      sectionHeaders.first().addClass("active_section");
+
+		// set default section header color
+		$(".section > h1").css("background",todoColor);
 
 		sectionHeaders.click(function() {
 			gotoSection($(".section").index($(this).parent())+1);
@@ -59,16 +65,35 @@ $(document).ready(function() {
 
 		      // FORM
 		      $("#fromaddress").keypress(function(event) {
+						// check if enter was pressed
 						     if(event.which == 13) {
 							 codeAddress(0, $(this).attr("value"));
 						     }
 						 });
+
+			$("#fromaddress").keyup(function(event) {
+					// check if enough information is available
+					if($(this).val() != "" && $("#toaddress").val() != "") {
+						$(".section:nth-child(1)").children(":first").css("background",okColor);
+					} else {
+						$(".section:nth-child(1)").children(":first").css("background",todoColor);
+					}
+			});
 		      
 		      $("#toaddress").keypress(function(event) {
 						   if(event.which == 13) {
 						       codeAddress(1, $(this).attr("value"));
 						   }
 					       });
+
+			$("#toaddress").keyup(function(event) {
+					// check if enough information is available
+					if($(this).val() != "" && $("#fromaddress").val() != "") {
+						$(".section:nth-child(1)").children(":first").css("background",okColor);
+					} else {
+						$(".section:nth-child(1)").children(":first").css("background",todoColor);
+					}
+			});
 
 		      $("#fromaddress").focus();
 
