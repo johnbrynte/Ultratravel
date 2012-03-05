@@ -49,132 +49,130 @@ $(document).ready(function() {
     $("#booking .section:first-child").height(maximized);
     sectionHeaders.first().addClass("active_section");
 
-        // set default section header color
-        $(".section > h1").css("background",todoColor);
+    // set default section header color
+    $(".section > h1").css("background",todoColor);
 
-        sectionHeaders.click(function() {
-            gotoSection($(".section").index($(this).parent())+1);
+    sectionHeaders.click(function() {
+        gotoSection($(".section").index($(this).parent())+1);
+    });
+
+    // CALENDAR
+    document.forms[0].arrival.value = todayString;
+    document.forms[0].departure.value = todayString;
+
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    geocoder = new google.maps.Geocoder();  
+
+    // FORM
+    $("#fromaddress").keypress(function(event) {
+        // check if enter was pressed
+        if(event.which == 13) {
+            codeAddress(0, $(this).attr("value"));
+        }
+    });
+
+    $("#fromaddress").keyup(function(event) {
+        // check if enough information is available
+        if($(this).val() != "" && $("#toaddress").val() != "") {
+            $(".section:nth-child(1)").children(":first").css("background",okColor);
+        } else {
+            $(".section:nth-child(1)").children(":first").css("background",todoColor);
+        }
+    });
+      
+    $("#toaddress").keypress(function(event) {
+        if(event.which == 13) {
+            codeAddress(1, $(this).attr("value"));
+        }
+    });
+
+    $("#toaddress").keyup(function(event) {
+            // check if enough information is available
+            if($(this).val() != "" && $("#fromaddress").val() != "") {
+                $(".section:nth-child(1)").children(":first").css("background",okColor);
+            } else {
+                $(".section:nth-child(1)").children(":first").css("background",todoColor);
+            }
+    });
+
+    $("#fromaddress").focus();
+
+    // LOGIN
+    if (typeof(Storage)!=="undefined") {
+        saveFunc = saveDataLocal;
+        loadFunc = loadDataLocal;
+    } else {
+        saveFunc = saveDataCookie;
+    }
+
+    loadFunc();
+
+    if (ultratravelUserData && ultratravelUserData.loggedin) {
+        writeLoginInfo();
+    } else {
+        $('#login').append('<div id="login_popup">'
+            + '<p>Anv&auml;ndarnamn: <input id="login_username" type="text" /></p>'
+            + '<p>L&ouml;senord: <input id="login_password" type="password" /></p>'
+            + '<input id="loginbutton" type="button" value="Logga in">'
+            + '</div>');
+
+        $('#loginbutton').click(function() {
+            ultratravelUserData = new UserData();
+            ultratravelUserData.loggedin = true;
+            ultratravelUserData.username = $('#login_username').val();
+            ultratravelUserData.password = $('#login_password').val();
+            if (ultratravelUserData.username === '' || ultratravelUserData.password === '') { 
+                alert('Var vänlig fyll i användarnamn och lösenord.');
+                return;
+            }
+
+            $('#login_popup').remove();
+            $('#login').append('<div id="login_menu">'
+                    + '<input id="saveUser" type="button" value="Spara" />'
+                    + '<input id="forgetUser" type="button" value="Glöm" />'
+                    + '</div>');
+              
+            writeLoginInfo();
         });
-
-              // CALENDAR
-              document.forms[0].arrival.value = todayString;
-              document.forms[0].departure.value = todayString;
-              
-              map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-              geocoder = new google.maps.Geocoder();
-              
-
-              // FORM
-              $("#fromaddress").keypress(function(event) {
-                        // check if enter was pressed
-                             if(event.which == 13) {
-                             codeAddress(0, $(this).attr("value"));
-                             }
-                         });
-
-            $("#fromaddress").keyup(function(event) {
-                    // check if enough information is available
-                    if($(this).val() != "" && $("#toaddress").val() != "") {
-                        $(".section:nth-child(1)").children(":first").css("background",okColor);
-                    } else {
-                        $(".section:nth-child(1)").children(":first").css("background",todoColor);
-                    }
-            });
-              
-              $("#toaddress").keypress(function(event) {
-                           if(event.which == 13) {
-                               codeAddress(1, $(this).attr("value"));
-                           }
-                           });
-
-            $("#toaddress").keyup(function(event) {
-                    // check if enough information is available
-                    if($(this).val() != "" && $("#fromaddress").val() != "") {
-                        $(".section:nth-child(1)").children(":first").css("background",okColor);
-                    } else {
-                        $(".section:nth-child(1)").children(":first").css("background",todoColor);
-                    }
-            });
-
-              $("#fromaddress").focus();
-
-              
-              // LOGIN
-              if (typeof(Storage)!=="undefined") {
-              saveFunc = saveDataLocal;
-              loadFunc = loadDataLocal;
-              } else {
-              saveFunc = saveDataCookie;
-              }
-              
-              loadFunc();
-              
-              if (ultratravelUserData && ultratravelUserData.loggedin) {
-              writeLoginInfo();
-              } else {
-              $('#login').append('<div id="login_popup">'
-                         + '<p>Anv&auml;ndarnamn: <input id="login_username" type="text" /></p>'
-                         + '<p>L&ouml;senord: <input id="login_password" type="password" /></p>'
-                         + '<input id="loginbutton" type="button" value="Logga in">'
-                         + '</div>');
-              
-              $('#loginbutton').click(function() {
-                              ultratravelUserData = new UserData();
-                              ultratravelUserData.loggedin = true;
-                              ultratravelUserData.username = $('#login_username').val();
-                              ultratravelUserData.password = $('#login_password').val();
-                              if (ultratravelUserData.username === '' || ultratravelUserData.password === '') { 
-                              alert('Var vänlig fyll i användarnamn och lösenord.');
-                              return;
-                              }
-                              
-                              $('#login_popup').remove();
-                              $('#login').append('<div id="login_menu">'
-                                     + '<input id="saveUser" type="button" value="Spara" />'
-                                     + '<input id="forgetUser" type="button" value="Glöm" />'
-                                     + '</div>');
-                              
-                              writeLoginInfo();
-                          });
-              }
-          });
+    }
+});
 
 
 function codeAddress(index,address) {
     geocoder.geocode( { 'address': address}, function(results, status) {
-              if (status == google.maps.GeocoderStatus.OK) {
-                  if (markers[index]) {
-                  markers[index].setMap(null);
-                  }
-                  
-                  
-                  markers[index] = new google.maps.Marker({
-                                      map: map,
-                                      position: results[0].geometry.location,
-                                      animation: google.maps.Animation.BOUNCE
-                                      });
-                  map.setCenter(results[0].geometry.location);
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (markers[index]) {
+                markers[index].setMap(null);
+            }
+              
+              
+            markers[index] = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                animation: google.maps.Animation.BOUNCE
+            });
+            map.setCenter(results[0].geometry.location);
 
-                  if (markers[1] && markers[0]) {
-                  if (line)
-                      line.setMap(null);
+            if (markers[1] && markers[0]) {
+            if (line)
+                line.setMap(null);
 
-                  var p1 = markers[0].getPosition();
-                  var p2 = markers[1].getPosition();
+            var p1 = markers[0].getPosition();
+            var p2 = markers[1].getPosition();
 
-                  line = new google.maps.Polyline({
-                                      map: map,
-                                      path: new google.maps.MVCArray([ p1, p2 ]),
-                                      strokeColor: "#f00",
-                                      geodesic: true
-                                  });
-                  map.setCenter(google.maps.geometry.spherical.interpolate(p1,p2,0.5));
-                  }
-              } else {
-                  alert("Geocode was not successful for the following reason: " + status);
-              }
-              });
+            line = new google.maps.Polyline({
+                map: map,
+                path: new google.maps.MVCArray([ p1, p2 ]),
+                strokeColor: "#f00",
+                geodesic: true
+            });
+            map.setCenter(google.maps.geometry.spherical.interpolate(p1,p2,0.5));
+            }
+        } else {
+            alert("Geocode was not successful for the following reason: " + status);
+        }
+    });
 }
 
 function gotoSection(number) {
