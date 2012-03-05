@@ -149,11 +149,24 @@ function codeAddress(index,address) {
                   markers[index].setMap(null);
                   }
                   
+                  // Make a nice marker yeah
+                  var markerIcon = new google.maps.MarkerImage('images/marker_mint_s.png',
+                  new google.maps.Size(31,40),      // Size
+                  new google.maps.Point(0,0),       // Origin
+                  new google.maps.Point(16,40));    // Anchor
+                  
+                  var markerShadow = new google.maps.MarkerImage('images/marker_shadow_s.png',
+                  new google.maps.Size(45,31),
+                  new google.maps.Point(0,0),
+                  new google.maps.Point(16,31));
+                 
                   
                   markers[index] = new google.maps.Marker({
                                       map: map,
                                       position: results[0].geometry.location,
-                                      animation: google.maps.Animation.BOUNCE
+                                      animation: google.maps.Animation.BOUNCE,
+                                      shadow: markerShadow,
+                                      icon: markerIcon
                                       });
                   map.setCenter(results[0].geometry.location);
 
