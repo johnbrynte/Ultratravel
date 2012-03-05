@@ -17,8 +17,8 @@ var markers = [];
 var saveFunc;
 var loadFunc;
 
-var okColor = "#67cb48";
-var todoColor = "#f84426";
+var okColor = "#37d2ac";
+var todoColor = "#ff8973";
 
 var ultratravelUserData;
 
@@ -38,9 +38,10 @@ $(document).ready(function() {
         zoom: 3,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         styles: [{
-            featureType: "all",
-            stylers: [
-            { saturation: -100 }
+             featureType: "all",
+		       stylers: [
+			   { hue: "#ffc890" },
+			   {  lightness: "25" }
             ]
         }]
     };
@@ -166,7 +167,7 @@ function codeAddress(index,address) {
                   line = new google.maps.Polyline({
                                       map: map,
                                       path: new google.maps.MVCArray([ p1, p2 ]),
-                                      strokeColor: "#f00",
+                                      strokeColor: okColor,
                                       geodesic: true
                                   });
                   map.setCenter(google.maps.geometry.spherical.interpolate(p1,p2,0.5));
