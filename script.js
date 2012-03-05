@@ -68,36 +68,27 @@ $(document).ready(function() {
 
     // FORM
     $("#fromaddress").keypress(function(event) {
-        // check if enter was pressed
-        if(event.which == 13) {
+        if(event.which == 13) { // check if enter was pressed
             codeAddress(0, $(this).attr("value"));
         }
     });
 
-    $("#fromaddress").keyup(function(event) {
-        // check if enough information is available
-        if($(this).val() != "" && $("#toaddress").val() != "") {
-            $(".section:nth-child(1)").children(":first").css("background",okColor);
-        } else {
-            $(".section:nth-child(1)").children(":first").css("background",todoColor);
-        }
-    });
       
     $("#toaddress").keypress(function(event) {
-        if(event.which == 13) {
+        if(event.which == 13) { // check if enter was pressed
             codeAddress(1, $(this).attr("value"));
         }
     });
 
+    // If the text field in section 1 changed
     $("#toaddress").keyup(function(event) {
-            // check if enough information is available
-            if($(this).val() != "" && $("#fromaddress").val() != "") {
-                $(".section:nth-child(1)").children(":first").css("background",okColor);
-            } else {
-                $(".section:nth-child(1)").children(":first").css("background",todoColor);
-            }
+        sectionDestinationChange();
+    });
+    $("#fromaddress").keyup(function(event) {
+        sectionDestinationChange();
     });
 
+    // Set the focus to the "from" text field
     $("#fromaddress").focus();
 
     // LOGIN
@@ -202,6 +193,7 @@ function gotoSection(number) {
 }
 
 function createFlights() {
+    var $secondSection = $(".section:nth-child(2)");
     var from = $("#fromaddress").val();
     var to = $("#toaddress").val();
     var $flights = $("#flights");
@@ -215,5 +207,22 @@ function createFlights() {
         for(i = 0; i < 3; i ++) {
             $flights.append('<p class="flight">'+flight()+'</p>');
         }
+        $(".flight").click(function() {
+            $(this).css("background","#aaa");
+            $secondSection.children(":first").css("background",okColor);
+            $secondSection.children(".nextbutton").css("visibility","visible");
+        });
     }
 }
+
+// check if enough information is available
+function sectionDestinationChange() {
+    var $firstSection = $(".section:nth-child(1)");
+    if($("#fromaddress").val() != "" && $("#toaddress").val() != "") {
+        $firstSection.children(":first").css("background",okColor);
+        $firstSection.children(".nextbutton").css("visibility","visible");
+    } else {
+        $(".section:nth-child(1)").children(":first").css("background",todoColor);
+        $firstSection.children(".nextbutton").css("visibility","hidden");
+    }
+};
