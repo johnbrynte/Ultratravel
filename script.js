@@ -17,130 +17,12 @@ var markers = [];
 var saveFunc;
 var loadFunc;
 
-var okColor = "#37d2ac";
-var todoColor = "#ff8973";
+var okColor = "#67cb48";
+var todoColor = "#f84426";
 
 var ultratravelUserData;
 
 $(document).ready(function() {
-<<<<<<< HEAD
-		      $(".section").height(minimized);
-		      $("#booking .section:first-child").height(maximized);
-		      var sectionHeaders = $(".section > h1");
-		      sectionHeaders.first().addClass("active_section");
-
-		// set default section header color
-		$(".section > h1").css("background",todoColor);
-
-		sectionHeaders.click(function() {
-			gotoSection($(".section").index($(this).parent())+1);
-		});
-
-		      // CALENDAR
-		      var today = new Date();
-		      var month = today.getMonth();
-		      var date = today.getDate();
-		      var string = today.getFullYear()+"/"+
-			  ((month<9)?"0"+(month+1):month+1)+"/"+
-			  ((date<10)?"0"+date:date)+" 13:37";
-		      document.forms[0].arrival.value = string;
-		      document.forms[0].departure.value = string;
-		      
-		      // GOOGLE MAPZ
-		      var myOptions = {
-			  disableDefaultUI: true,
-			  scrollwheel: false,
-			  center: new google.maps.LatLng(50, 0),
-			  zoom: 3,
-			  mapTypeId: google.maps.MapTypeId.ROADMAP,
-			  styles: [{
-				       featureType: "all",
-				       stylers: [
-					   { hue: "#ffb68a" }
-				       ]
-				   }]
-		      };
-		      
-		      map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-		      geocoder = new google.maps.Geocoder();
-		      
-
-		      // FORM
-		      $("#fromaddress").keypress(function(event) {
-						// check if enter was pressed
-						     if(event.which == 13) {
-							 codeAddress(0, $(this).attr("value"));
-						     }
-						 });
-
-			$("#fromaddress").keyup(function(event) {
-					// check if enough information is available
-					if($(this).val() != "" && $("#toaddress").val() != "") {
-						$(".section:nth-child(1)").children(":first").css("background",okColor);
-					} else {
-						$(".section:nth-child(1)").children(":first").css("background",todoColor);
-					}
-			});
-		      
-		      $("#toaddress").keypress(function(event) {
-						   if(event.which == 13) {
-						       codeAddress(1, $(this).attr("value"));
-						   }
-					       });
-
-			$("#toaddress").keyup(function(event) {
-					// check if enough information is available
-					if($(this).val() != "" && $("#fromaddress").val() != "") {
-						$(".section:nth-child(1)").children(":first").css("background",okColor);
-					} else {
-						$(".section:nth-child(1)").children(":first").css("background",todoColor);
-					}
-			});
-
-		      $("#fromaddress").focus();
-
-		      
-		      // LOGIN
-		      if (typeof(Storage)!=="undefined") {
-			  saveFunc = saveDataLocal;
-			  loadFunc = loadDataLocal;
-		      } else {
-			  saveFunc = saveDataCookie;
-		      }
-		      
-		      loadFunc();
-		      
-		      if (ultratravelUserData && ultratravelUserData.loggedin) {
-			  writeLoginInfo();
-		      } else {
-			  $('#login').append('<div id="login_popup">'
-					     + '<p>Anv&auml;ndarnamn: <input id="login_username" type="text" /></p>'
-					     + '<p>L&ouml;senord: <input id="login_password" type="password" /></p>'
-					     + '<input id="loginbutton" type="button" value="Logga in">'
-					     + '</div>');
-			  
-			  $('#loginbutton').click(function() {
-						      ultratravelUserData = new UserData();
-						      ultratravelUserData.loggedin = true;
-						      ultratravelUserData.username = $('#login_username').val();
-						      ultratravelUserData.password = $('#login_password').val();
-						      if (ultratravelUserData.username === '' || ultratravelUserData.password === '') { 
-							  alert('Var vänlig fyll i användarnamn och lösenord.');
-							  return;
-						      }
-						      
-						      $('#login_popup').remove();
-						      $('#login').append('<div id="login_menu">'
-									 + '<input id="saveUser" type="button" value="Spara" />'
-									 + '<input id="forgetUser" type="button" value="Glöm" />'
-									 + '</div>');
-						      
-						      writeLoginInfo();
-						  });
-		      }
-		  });
-=======
     var today = new Date();
     var month = today.getMonth();
     var date = today.getDate();
@@ -257,7 +139,6 @@ $(document).ready(function() {
                           });
               }
           });
->>>>>>> 022cbcb4821c94d230fdfa9faff39b5e3f67e0f2
 
 
 function codeAddress(index,address) {
