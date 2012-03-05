@@ -46,7 +46,7 @@ $(document).ready(function() {
             ]
         }]
     };
-    
+
     $(".section").height(minimized);
     $("#booking .section:first-child").height(maximized);
     sectionHeaders.first().addClass("active_section");
@@ -62,6 +62,10 @@ $(document).ready(function() {
     document.forms[0].arrival.value = todayString;
     document.forms[0].departure.value = todayString;
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 27961cad1af8fa0b7f80021864536089372e1923
     geocoder = new google.maps.Geocoder();
 
     // FORM
@@ -79,7 +83,7 @@ $(document).ready(function() {
             $(".section:nth-child(1)").children(":first").css("background",todoColor);
         }
     });
-      
+
     $("#toaddress").keypress(function(event) {
         if(event.which == 13) {
             codeAddress(1, $(this).attr("value"));
@@ -111,10 +115,10 @@ $(document).ready(function() {
         writeLoginInfo();
     } else {
         $('#login').append('<div id="login_popup">'
-            + '<p>Anv&auml;ndarnamn: <input id="login_username" type="text" /></p>'
-            + '<p>L&ouml;senord: <input id="login_password" type="password" /></p>'
-            + '<input id="loginbutton" type="button" value="Logga in">'
+            + '<span>Anv&auml;ndarnamn: <input id="login_username" type="text" /></span>'
+            + '<span>L&ouml;senord: <input id="login_password" type="password" /></span>'
             + '</div>');
+<<<<<<< HEAD
  
         $('#loginbutton').click(function() {
             ultratravelUserData = new UserData();
@@ -133,6 +137,29 @@ $(document).ready(function() {
                     + '</div>');
                
             writeLoginInfo();
+=======
+
+        $('#login_password').keypress(function(evt) {
+            if (evt.which === 13) {
+                ultratravelUserData = new UserData();
+                ultratravelUserData.loggedin = true;
+                ultratravelUserData.username = $('#login_username').val();
+                ultratravelUserData.password = $('#login_password').val();
+                if (ultratravelUserData.username === '' || ultratravelUserData.password === '') {
+                    alert('Var vänlig fyll i användarnamn och lösenord.');
+                    return;
+                }
+
+                $('#login_popup').remove();
+                $('#login').append('<div id="login_menu">'
+                        + '<input id="saveUser" type="button" value="Spara" />'
+                        + '<input id="forgetUser" type="button" value="Glöm" />'
+                        + '</div>');
+                $('#login_menu input').hide();
+
+                writeLoginInfo();
+            }
+>>>>>>> 27961cad1af8fa0b7f80021864536089372e1923
         });
     }
 });
@@ -189,7 +216,7 @@ function codeAddress(index,address) {
 
 function gotoSection(number) {
     var $section = $(".section:nth-child("+number+")");
-    if ($section.height() > minimized) { 
+    if ($section.height() > minimized) {
         return;
     }
 
