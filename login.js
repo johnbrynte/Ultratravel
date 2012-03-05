@@ -1,7 +1,7 @@
 /**
- * login.js 
+ * login.js
  * @author Anton Erholt
- * 
+ *
  * Contains functions for manipulating userData and login.
  */
 
@@ -30,10 +30,9 @@ function loadDataLocal() {
 }
 
 function writeLoginInfo() {
-    $('#login').append('<p><b>Logged in as:</b> '+ultratravelUserData.username+'</p>');
+    $('#login').append('<p><b>Inloggad som: </b>'+ultratravelUserData.username+'</p>');
 }
 
 function saveDataCookie() {
     alert("Din webblösare stöder inte inloggning. Var vänlig uppgradera din webbläsare.");
 }
-

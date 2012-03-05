@@ -46,7 +46,7 @@ $(document).ready(function() {
             ]
         }]
     };
-    
+
     $(".section").height(minimized);
     $("#booking .section:first-child").height(maximized);
     sectionHeaders.first().addClass("active_section");
@@ -105,9 +105,8 @@ $(document).ready(function() {
         writeLoginInfo();
     } else {
         $('#login').append('<div id="login_popup">'
-            + '<p>Anv&auml;ndarnamn: <input id="login_username" type="text" /></p>'
-            + '<p>L&ouml;senord: <input id="login_password" type="password" /></p>'
-            + '<input id="loginbutton" type="button" value="Logga in">'
+            + '<span>Anv&auml;ndarnamn: <input id="login_username" type="text" /></span>'
+            + '<span>L&ouml;senord: <input id="login_password" type="password" /></span>'
             + '</div>');
 
         $('#loginbutton').click(function() {
@@ -128,27 +127,64 @@ $(document).ready(function() {
               
             writeLoginInfo();
         });
+
+        $('#login_password').keypress(function(evt) {
+            if (evt.which === 13) {
+                ultratravelUserData = new UserData();
+                ultratravelUserData.loggedin = true;
+                ultratravelUserData.username = $('#login_username').val();
+                ultratravelUserData.password = $('#login_password').val();
+                if (ultratravelUserData.username === '' || ultratravelUserData.password === '') {
+                    alert('Var vänlig fyll i användarnamn och lösenord.');
+                    return;
+                }
+
+                $('#login_popup').remove();
+                $('#login').append('<div id="login_menu">'
+                        + '<input id="saveUser" type="button" value="Spara" />'
+                        + '<input id="forgetUser" type="button" value="Glöm" />'
+                        + '</div>');
+                $('#login_menu input').hide();
+
+                writeLoginInfo();
+            }
+        });
     }
 });
 
 
 function codeAddress(index,address) {
     geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            if (markers[index]) {
-                markers[index].setMap(null);
-            }
-
-            markers[index] = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location,
-                animation: google.maps.Animation.BOUNCE
-            });
-            map.setCenter(results[0].geometry.location);
+              if (status == google.maps.GeocoderStatus.OK) {
+                  if (markers[index]) {
+                  markers[index].setMap(null);
+                  }
+                  
+                  // Make a nice marker yeah
+                  var markerIcon = new google.maps.MarkerImage('images/marker_mint_s.png',
+                  new google.maps.Size(31,40),      // Size
+                  new google.maps.Point(0,0),       // Origin
+                  new google.maps.Point(16,40));    // Anchor
+                  
+                  var markerShadow = new google.maps.MarkerImage('images/marker_shadow_s.png',
+                  new google.maps.Size(45,31),
+                  new google.maps.Point(0,0),
+                  new google.maps.Point(16,31));
+                 
+                  
+                  markers[index] = new google.maps.Marker({
+                                      map: map,
+                                      position: results[0].geometry.location,
+                                      animation: google.maps.Animation.BOUNCE,
+                                      shadow: markerShadow,
+                                      icon: markerIcon
+                                      });
+                  map.setCenter(results[0].geometry.location);
 
             if (markers[1] && markers[0]) {
-            if (line)
+            if (line) {
                 line.setMap(null);
+            }
 
             var p1 = markers[0].getPosition();
             var p2 = markers[1].getPosition();
@@ -169,7 +205,7 @@ function codeAddress(index,address) {
 
 function gotoSection(number) {
     var $section = $(".section:nth-child("+number+")");
-    if ($section.height() > minimized) { 
+    if ($section.height() > minimized) {
         return;
     }
 
