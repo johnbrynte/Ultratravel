@@ -15,8 +15,8 @@ var markers = [];
 var saveFunc;
 var loadFunc;
 
-var okColor = "#67cb48";
-var todoColor = "#f84426";
+var okColor = "#37d2ac";
+var todoColor = "#ff8973";
 
 var ultratravelUserData;
 
@@ -53,7 +53,7 @@ $(document).ready(function() {
 			  styles: [{
 				       featureType: "all",
 				       stylers: [
-					   { saturation: -100 }
+					   { hue: "#ffb68a" }
 				       ]
 				   }]
 		      };
