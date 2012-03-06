@@ -80,32 +80,42 @@ $(document).ready(function() {
 
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    geocoder = new google.maps.Geocoder();  
+    geocoder = new google.maps.Geocoder();
 
     // FORM
-    $("#fromaddress").keypress(function(event) {
-        if(event.which == 13) { // check if enter was pressed
+    var fa = $("#fromaddress");
+    var ta = $("#toaddress");
+    fa.keypress(function(event) {
+        if (event.which === 13) { // check if enter was pressed
+            codeAddress(0, $(this).attr("value"));
+        }
+    }).focusout(function(event) {
+        if (fa.val() !== '') {
             codeAddress(0, $(this).attr("value"));
         }
     });
 
-      
-    $("#toaddress").keypress(function(event) {
-        if(event.which == 13) { // check if enter was pressed
+
+    ta.keypress(function(event) {
+        if (event.which === 13) { // check if enter was pressed
+            codeAddress(1, $(this).attr("value"));
+        }
+    }).focusout(function(event) {
+        if (ta.val()!== '') {
             codeAddress(1, $(this).attr("value"));
         }
     });
 
     // If the text field in section 1 changed
-    $("#toaddress").keyup(function(event) {
+    ta.keyup(function(event) {
         firstSectionChange();
     });
-    $("#fromaddress").keyup(function(event) {
+    fa.keyup(function(event) {
         firstSectionChange();
     });
 
     // Set the focus to the "from" text field
-    $("#fromaddress").focus();
+    fa.focus();
 
     // LOGIN
     if (typeof(Storage)!=="undefined") {
@@ -133,7 +143,7 @@ $(document).ready(function() {
             ultratravelUserData.loggedin = true;
             ultratravelUserData.username = $('#login_username').val();
             ultratravelUserData.password = $('#login_password').val();
-            if (ultratravelUserData.username === '' || ultratravelUserData.password === '') { 
+            if (ultratravelUserData.username === '' || ultratravelUserData.password === '') {
                 alert('Var vänlig fyll i användarnamn och lösenord.');
                 return;
             }
@@ -143,7 +153,7 @@ $(document).ready(function() {
                     + '<input id="saveUser" type="button" value="Spara" />'
                     + '<input id="forgetUser" type="button" value="Glöm" />'
                     + '</div>');
-              
+
             writeLoginInfo();
         });
 
@@ -178,7 +188,7 @@ function codeAddress(index,address) {
             if (markers[index]) {
                 markers[index].setMap(null);
             }
-              
+
             // Make a nice marker yeah
             var markerIcon = new google.maps.MarkerImage('images/marker_mint_s.png',
             new google.maps.Size(31,40),    // Size
@@ -230,7 +240,7 @@ function gotoSection(number) {
 
     // if the flight section is selected
     if(number === 2) {
-        
+
         createFlights();
     }
 
@@ -241,12 +251,12 @@ function gotoSection(number) {
             disableSectionsFrom(4, true);
         }
     }
-    
+
     // if the betalning section is selected
     if(number === 5){
         $("#payment").html("<h2>" + selectedFlight.from + " - " + selectedFlight.to +"</h2>"+flight(selectedFlight));
         var hotelPrice = 0;
-    
+
         // Display a summary of the booking if hotel
         if(!$section.prev().children("p").children("input").attr("checked")) {
             $("#payment").append(hotelStay(selectedHotel));
@@ -254,7 +264,7 @@ function gotoSection(number) {
         }
 
         $("#payment").append("<div style='float:right'><h2>Totalt: "+(selectedFlight.price + hotelPrice)+":-</h2><input style='margin: 5px 30px 0 0; width: 100px;' type='button' value='Betala' onclick=\"alert('Konto tömt!')\" /></div>");
-        
+
     }
 
     $(".active_section").removeClass("active_section");
@@ -388,7 +398,7 @@ function updateBoende(checked) {
 
         $section.children(".nextbutton").css("visibility","hidden");
         $hotels.html("");
-        
+
         currentHotels = new Array(4);
         for(i = 0; i<currentHotels.length; i+=1){
             currentHotels[i] = createRandomHotel();
@@ -404,7 +414,7 @@ function updateBoende(checked) {
                 selectedHotel = currentHotels[$hotels.children("p").index(this)];
             });
         }
-        
+
         $hotels.show();
     }
 }
