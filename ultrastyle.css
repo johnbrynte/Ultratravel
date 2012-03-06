@@ -176,6 +176,10 @@ h1 {
     visibility: hidden;
 }
 
+.invalid {
+    background: #ff8973;
+}
+
 /* flights */
 .flight {
     width: 440px;
@@ -213,10 +217,24 @@ h1 {
     width: 16px;
     height: 16px;
     margin: 0 6px 0 0;
-    background: #00f;
+    background: #aaf;
     border-radius: 8px;
     display: inline-block;
     cursor: pointer;
+}
+
+.fseat:hover:not(.noseat) {
+    background: #37d2ac;
+}
+
+.noseat {
+    background: #ff8973;
+    cursor: default !important;
+}
+
+.yesseat {
+    background: #37d2ac;
+    box-shadow: 0 0 20px #37d2ac;
 }
 
 /* hotels */

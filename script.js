@@ -58,8 +58,8 @@ $(document).ready(function() {
     // initialize sections
     $(".section").not("first-child").height(minimized);
     $(".section:first-child").height(maximized);
-    $sectionHeaders.first().addClass("active_section");
-    $sectionHeaders.first().addClass("enabled");
+    disableSectionsFrom(1, false);
+    $(".section:first-child").children("h1").addClass("active_section");
 
     // set default section header color
     $(".section > h1").css("background",todoColor);
@@ -80,27 +80,31 @@ $(document).ready(function() {
 
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    geocoder = new google.maps.Geocoder();  
+    geocoder = new google.maps.Geocoder();
 
-    // FORM
+    // Key press in section 1
     $("#fromaddress").keypress(function(event) {
-        if(event.which == 13) { // check if enter was pressed
-            codeAddress(0, $(this).attr("value"));
+        if(event.which === 13) { // check if enter was pressed
+            codeAddress(0, $(this).attr("value"), null);
         }
     });
-
-      
     $("#toaddress").keypress(function(event) {
-        if(event.which == 13) { // check if enter was pressed
-            codeAddress(1, $(this).attr("value"));
+        if(event.which === 13) { // check if enter was pressed
+            codeAddress(1, $(this).attr("value"), null);
         }
     });
 
     // If the text field in section 1 changed
     $("#toaddress").keyup(function(event) {
+        if(event.which !== 13) {
+            $(this).removeClass("invalid");
+        }
         firstSectionChange();
     });
     $("#fromaddress").keyup(function(event) {
+        if(event.which !== 13) {
+            $(this).removeClass("invalid");
+        }
         firstSectionChange();
     });
 
@@ -172,7 +176,7 @@ $(document).ready(function() {
 });
 
 
-function codeAddress(index,address) {
+function codeAddress(index, address, func) {
     geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (markers[index]) {
@@ -190,6 +194,8 @@ function codeAddress(index,address) {
             new google.maps.Point(0,0),
             new google.maps.Point(16,31));
 
+            var p1, p2;
+
             markers[index] = new google.maps.Marker({
                 map: map,
                 position: results[0].geometry.location,
@@ -200,29 +206,48 @@ function codeAddress(index,address) {
             map.setCenter(results[0].geometry.location);
 
             if (markers[1] && markers[0]) {
-            if (line) {
-                line.setMap(null);
+                if (line) {
+                    line.setMap(null);
+                }
+
+                p1 = markers[0].getPosition();
+                p2 = markers[1].getPosition();
+
+                line = new google.maps.Polyline({
+                    map: map,
+                    path: new google.maps.MVCArray([ p1, p2 ]),
+                    strokeColor: okColor,
+                    geodesic: true
+                });
+
+                map.setCenter(google.maps.geometry.spherical.interpolate(p1,p2,0.5));
             }
 
-            var p1 = markers[0].getPosition();
-            var p2 = markers[1].getPosition();
-
-            line = new google.maps.Polyline({
-                map: map,
-                path: new google.maps.MVCArray([ p1, p2 ]),
-                strokeColor: okColor,
-                geodesic: true
-            });
-            map.setCenter(google.maps.geometry.spherical.interpolate(p1,p2,0.5));
+            // set the actually fetched address
+            if(index === 0) {
+                $("#fromaddress").val(results[0].formatted_address);
+            } else {
+                $("#toaddress").val(results[0].formatted_address);
             }
         } else {
-            alert("Geocode was not successful for the following reason: " + status);
+            if(status === "ZERO_RESULTS") {
+                if(index === 0) {
+                    $("#fromaddress").addClass("invalid");
+                } else {
+                    $("#toaddress").addClass("invalid");
+                }
+            }
+        }
+        if(func) {
+            func();
         }
     });
 }
 
 function gotoSection(number) {
     var $section = $(".section:nth-child("+number+")");
+    var from = $("#fromaddress").val();
+    var to = $("#toaddress").val();
 
     if($section.height() > minimized) {
         return;
@@ -230,8 +255,23 @@ function gotoSection(number) {
 
     // if the flight section is selected
     if(number === 2) {
-        
-        createFlights();
+        if($("#fromaddress").is(".invalid") || $("#toaddress").is(".invalid")) {
+            return;
+        }
+        if(selectedFlight.from !== from || selectedFlight.to !== to) {
+            selectedFlight.from = from;
+            selectedFlight.to = to;
+            // draw a new line between the markers
+            codeAddress(0, from, function() {
+                codeAddress(1, to, function() {
+                    if(!($("#fromaddress").is(".invalid") || $("#toaddress").is(".invalid"))) {
+                        createFlights();
+                        gotoSection(2);
+                    }
+                });
+            });
+            return;
+        }
     }
 
     // if the boende section is selected
@@ -277,40 +317,41 @@ function createFlights() {
     var $section = $(".section:nth-child(2)");
     var from = $("#fromaddress").val();
     var to = $("#toaddress").val();
+    var $seats = $(".fseat");
 
-    if(selectedFlight.from !== from || selectedFlight.to !== to) {
-        $flights.html('<p>Flights från <b>'+from+'</b> till <b>'+to+'</b></p>');
+    $flights.html('<p>Visar flights från <b>'+from+'</b> till <b>'+to+'</b></p>');
 
-        currentFlights = new Array(3);
-        for(i = 0; i < currentFlights.length; i ++) {
-            currentFlights[i] = createRandomFlight();
-            $flights.append('<p class="flight">'
-                +currentFlights[i].time.start.h+':'+currentFlights[i].time.start.m
-                +' - '+currentFlights[i].time.end.h+':'+currentFlights[i].time.end.m
-                +'<br/>'+currentFlights[i].airline
-                +'<br/>'+currentFlights[i].aircraft
-                +'<br/>'+currentFlights[i].price+':-'
-                +'</p>');
-        }
-        $(".flight").click(function() {
-            $(".flight").not(this).css("background","#fff");
-            $(this).css("background",selectionColor);
-            $section.children(":first").addClass("approved");
-            $section.next().children(":first").addClass("enabled");
-            $section.children(".nextbutton").css("visibility","visible");
-
-            // save the flight
-            selectedFlight = currentFlights[$(".flight").index(this)];
-            selectedFlight.from = from;
-            selectedFlight.to = to;
-
-            // clear the flight seat section
-            disableSectionsFrom(2, true);
-            $(".fseat").css("background","#00f");
-        });
-    } else {
-
+    currentFlights = new Array(3);
+    for(i = 0; i < currentFlights.length; i ++) {
+        currentFlights[i] = createRandomFlight();
+        $flights.append('<p class="flight">'
+            +currentFlights[i].time.start.h+':'+currentFlights[i].time.start.m
+            +' - '+currentFlights[i].time.end.h+':'+currentFlights[i].time.end.m
+            +'<br/>'+currentFlights[i].airline
+            +'<br/>'+currentFlights[i].aircraft
+            +'<br/>'+currentFlights[i].price+':-'
+            +'</p>');
     }
+    $(".flight").click(function() {
+        $(".flight").not(this).css("background","#fff");
+        $(this).css("background",selectionColor);
+
+        // clear the boende section
+        updateBoende($(".section:nth-child(4)").children("p").children(":checkbox").attr("checked") === "checked");
+
+        // clear the flight seat section
+        disableSectionsFrom(2, true);
+        for(i = 0; i < $seats.length; i += 1) {
+            $seats[i].setAttribute("class", (Math.random() < 0.4)? "fseat noseat" : "fseat");
+        }
+
+        disableSectionsFrom(2, true);
+
+        // save the flight
+        selectedFlight = currentFlights[$(".flight").index(this)];
+        selectedFlight.from = from;
+        selectedFlight.to = to;
+    });
 }
 
 function generateFlightSeats() {
@@ -333,12 +374,12 @@ function generateFlightSeats() {
                 for(l = 0; l < 9; l += 1) {
                     $fcol.append("<div class='fseat'></div>");
                     $fcol.children(":nth-child("+(l+1)+")").click(function() {
-                        $(".fseat").not(this).css("background","#00f");
-                        $(this).css("background","#f00");
+                        if(!$(this).is(".noseat")) {
+                            $(".fseat").not(this).not(".noseat").removeClass("yesseat");
+                            $(this).addClass("yesseat");
 
-                        $section.children(":first").addClass("approved");
-                        $section.next().children(":first").addClass("enabled");
-                        $section.children(".nextbutton").css("visibility","visible");
+                            disableSectionsFrom(3, true);
+                        }
                     });
                 }
             }
@@ -350,25 +391,28 @@ function firstSectionChange() {
     var $section = $(".section:nth-child(1)");
 
     if($("#fromaddress").val() !== "" && $("#toaddress").val() !== "") {
-        disableSectionsFrom(1, true);
-        $section.children("h1").addClass("approved");
-        $section.next().children("h1").addClass("enabled");
-        $section.children(".nextbutton").css("visibility","visible");
+        if(!($("#fromaddress").is(".invalid") || $("#toaddress").is(".invalid"))) {
+            disableSectionsFrom(1, true);
+        }
     } else {
         disableSectionsFrom(1, false);
-        $section.next().children("h1").removeClass("enabled");
-        $section.children(".nextbutton").css("visibility","hidden");
     }
 };
 
 function disableSectionsFrom(number, approved) {
+    var $section = $(".section:nth-child("+number+")");
+    $section.children("h1").addClass("enabled");
     if(number > 1) {
         $(".section:gt("+(number-2)+")").children("h1").removeClass("approved");
     } else {
         $(".section").children("h1").removeClass("approved");
     }
     if(approved) {
-        $(".section:nth-child("+number+")").children("h1").addClass("approved");
+        $section.children("h1").addClass("approved");
+        $section.next().children("h1").addClass("enabled");
+        $section.children(".nextbutton").css("visibility","visible");
+    } else {
+        $section.children(".nextbutton").css("visibility","hidden");
     }
     $(".section:gt("+number+")").children("h1").removeClass("enabled");
     $(".section:gt("+(number-1)+")").children(".nextbutton").css("visibility","hidden");
@@ -386,7 +430,6 @@ function updateBoende(checked) {
     } else {
         disableSectionsFrom(4, false);
 
-        $section.children(".nextbutton").css("visibility","hidden");
         $hotels.html("");
         
         currentHotels = new Array(4);
@@ -397,9 +440,7 @@ function updateBoende(checked) {
                 $hotels.children("p").not(this).css("background","#fff");
                 $(this).css("background",selectionColor);
 
-                $section.children(":first").addClass("approved");
-                $section.next().children(":first").addClass("enabled");
-                $section.children(".nextbutton").css("visibility","visible");
+                disableSectionsFrom(4, true);
 
                 selectedHotel = currentHotels[$hotels.children("p").index(this)];
             });
