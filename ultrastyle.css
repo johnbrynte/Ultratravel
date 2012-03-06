@@ -144,7 +144,7 @@ h1 {
 .section h2 {
     font-size: 1.4em;
     color: 666;
-    margin-left: 20px;
+    margin: 10px 30px 5px 20px;
     -webkit-margin-before: 15px;
     -webkit-margin-after: 5px;
 }
@@ -167,16 +167,18 @@ h1 {
     cursor: pointer;
 }
 
-#flights p {
-    margin: 5px 0 5px 30px;
-}
-
 .flight {
     width: 440px;
+    height: 76px;
+    margin: 5px 0 5px 30px !important;
     padding: 5px;
     background: #fff;
     border: 1px solid #ccc;
     cursor: pointer;
+}
+
+#flights p {
+    margin: 5px 0 5px 30px;
 }
 
 .flight:hover {

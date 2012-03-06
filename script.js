@@ -226,7 +226,7 @@ function gotoSection(number) {
     }
 
     $(".active_section").removeClass("active_section");
-    $section.children(":first").addClass("active_section");
+    $section.children("h1").addClass("active_section");
 
     var expand = {};
     expand["height"] = maximized;
@@ -247,7 +247,7 @@ function createFlights() {
     var to = $("#toaddress").val();
 
     if(selectedFlight.from !== from || selectedFlight.to !== to) {
-        $flights.html('<p>Flights från <b>'+from+'</b> till <b>'+to+'</b></p><table>');
+        $flights.html('<p>Flights från <b>'+from+'</b> till <b>'+to+'</b></p>');
 
         currentFlights = new Array(3);
         for(i = 0; i < currentFlights.length; i ++) {
@@ -270,6 +270,10 @@ function createFlights() {
             // save the flight
             selectedFlight.from = from;
             selectedFlight.to = to;
+
+            // clear the flight seat section
+            disableSectionsFrom(2, true);
+            $(".fseat").css("background","#00f");
         });
     } else {
 
@@ -312,16 +316,26 @@ function generateFlightSeats() {
 function firstSectionChange() {
     var $section = $(".section:nth-child(1)");
 
-    if($("#fromaddress").val() != "" && $("#toaddress").val() != "") {
-        $(".section").children(":first").removeClass("approved")
-        $(".section").children(":first").removeClass("enabled");
-        $section.children(":first").addClass("approved");
-        $section.children(":first").addClass("enabled");
-        $section.next().children(":first").addClass("enabled");
+    if($("#fromaddress").val() !== "" && $("#toaddress").val() !== "") {
+        disableSectionsFrom(1, true);
+        $section.children("h1").addClass("approved");
+        $section.next().children("h1").addClass("enabled");
         $section.children(".nextbutton").css("visibility","visible");
     } else {
-        $section.children(":first").removeClass("approved");
-        $section.next().children(":first").removeClass("enabled");
+        disableSectionsFrom(1, false);
+        $section.next().children("h1").removeClass("enabled");
         $section.children(".nextbutton").css("visibility","hidden");
     }
 };
+
+function disableSectionsFrom(number, approved) {
+    if(number > 1) {
+        $(".section:gt("+(number-2)+")").children("h1").removeClass("approved");
+    } else {
+        $(".section").children("h1").removeClass("approved");
+    }
+    if(approved) {
+        $(".section:nth-child("+number+")").children("h1").addClass("approved");
+    }
+    $(".section:gt("+number+")").children("h1").removeClass("enabled");
+}
