@@ -29,29 +29,37 @@
 
     <div id="booking">
         <div class="section">
-        <h1>Destination</h1>
-        <form>
-        <p>Från:
-        <input id="fromaddress" type="text" value="" /></p>
-        <p>Till:
-        <input id="toaddress" type="text" value="" /></p>
-        <p>Tid för ankomst:
-        <input id="arrival" type="button" onclick="displayCalendar(document.getElementById('arrival'),'yyyy/mm/dd hh:ii',this,true)" /></p>
-        <p>Tid för hemresa:
-        <input id="departure" type="button" onclick="displayCalendar(document.getElementById('departure'),'yyyy/mm/dd hh:ii',this,true)" /></p>
-        </form>
-        <input class="nextbutton" type="button" value="nästa" onclick="gotoSection(2)" />
+            <h1>Destination</h1>
+            <h3>Från:
+            <input id="fromaddress" type="text" value="" /></h3>
+            <h3>Till:
+            <input id="toaddress" type="text" value="" /></h3>
+            <h3>Tid för ankomst:
+            <input id="arrival" type="button" onclick="displayCalendar(document.getElementById('arrival'),'yyyy/mm/dd hh:ii',this,true)" /></h3>
+            <h3>Tid för hemresa:
+            <input id="departure" type="button" onclick="displayCalendar(document.getElementById('departure'),'yyyy/mm/dd hh:ii',this,true)" /></h3>
+            <input class="nextbutton" type="button" value="nästa" onclick="gotoSection(2)" />
         </div>
 
         <div class="section">
-        <h1>Flights</h1>
+            <h1>Flights</h1>
+            <h2>Välj en flight</h2>
             <div id="flights">
                 <p>Välj avgångsort och resmål under sektionen
                     <span class="linktosection" onclick="gotoSection(1)">Destination
                     </span>
                 </p>
             </div>
-        <input class="nextbutton" type="button" value="nästa" onclick="gotoSection(3)" />
+            <input class="nextbutton" type="button" value="nästa" onclick="gotoSection(3)" />
+        </div>
+
+        <div class="section">
+            <h1>Flight - sittplats</h1>
+            <h2>Välj en sittplats</h2>
+            <p>Välj sittplats genom att trycka på föredragen plats i figuren.</p>
+            <div id="flightseats">
+            </div>
+            <input class="nextbutton" type="button" value="nästa" onclick="gotoSection(4)" />
         </div>
 
         <div class="section">

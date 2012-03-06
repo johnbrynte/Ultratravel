@@ -22,6 +22,9 @@ var todoColor = "#ff8973";
 
 var ultratravelUserData;
 
+var currentFlights;
+var selectedFlight = {};
+
 $(document).ready(function() {
     var today = new Date();
     var month = today.getMonth();
@@ -63,6 +66,9 @@ $(document).ready(function() {
         }
     });
 
+    // Generate those flightseats
+    generateFlightSeats();
+
     // CALENDAR
     $("#arrival").val(todayString);
     $("#departure").val(todayString)
@@ -87,10 +93,10 @@ $(document).ready(function() {
 
     // If the text field in section 1 changed
     $("#toaddress").keyup(function(event) {
-        sectionDestinationChange();
+        firstSectionChange();
     });
     $("#fromaddress").keyup(function(event) {
-        sectionDestinationChange();
+        firstSectionChange();
     });
 
     // Set the focus to the "from" text field
@@ -209,13 +215,15 @@ function codeAddress(index,address) {
 
 function gotoSection(number) {
     var $section = $(".section:nth-child("+number+")");
-    if ($section.height() > minimized) {
+
+    if($section.height() > minimized) {
         return;
     }
 
     // if the flight section is selected
-    if(number == 2)
+    if(number === 2) {
         createFlights();
+    }
 
     $(".active_section").removeClass("active_section");
     $section.children(":first").addClass("active_section");
@@ -233,39 +241,87 @@ function gotoSection(number) {
 }
 
 function createFlights() {
-    var $secondSection = $(".section:nth-child(2)");
+    var $flights = $("#flights");
+    var $section = $(".section:nth-child(2)");
     var from = $("#fromaddress").val();
     var to = $("#toaddress").val();
-    var $flights = $("#flights");
 
-    $flights.html("");
+    if(selectedFlight.from !== from || selectedFlight.to !== to) {
+        $flights.html('<p>Flights från <b>'+from+'</b> till <b>'+to+'</b></p><table>');
 
-    if(from == "" || to == "") {
-        $flights.append('<p>Välj avgångsort och resmål under sektionen <span class="linktosection" onclick="gotoSection(1)">Destination</span></p>');
-    } else {
-        $flights.append('<p>Flights från <b>'+from+'</b> till <b>'+to+'</b></p>');
-        for(i = 0; i < 3; i ++) {
-            $flights.append('<p class="flight">'+flight()+'</p>');
+        currentFlights = new Array(3);
+        for(i = 0; i < currentFlights.length; i ++) {
+            currentFlights[i] = createRandomFlight();
+            $flights.append('<p class="flight">'
+                +currentFlights[i].time.start.h+':'+currentFlights[i].time.start.m
+                +' - '+currentFlights[i].time.end.h+':'+currentFlights[i].time.end.m
+                +'<br/>'+currentFlights[i].airline
+                +'<br/>'+currentFlights[i].aircraft
+                +'<br/>'+currentFlights[i].price+':-'
+                +'</p>');
         }
         $(".flight").click(function() {
             $(".flight").not(this).css("background","#fff");
             $(this).css("background","#aaa");
-            $secondSection.children(":first").css("background",okColor);
-            $secondSection.next().children(":first").addClass("enabled");
-            $secondSection.children(".nextbutton").css("visibility","visible");
+            $section.children(":first").addClass("approved");
+            $section.next().children(":first").addClass("enabled");
+            $section.children(".nextbutton").css("visibility","visible");
+
+            // save the flight
+            selectedFlight.from = from;
+            selectedFlight.to = to;
         });
+    } else {
+
     }
 }
 
-function sectionDestinationChange() {
-    var $firstSection = $(".section:nth-child(1)");
+function generateFlightSeats() {
+    var $section = $(".section:nth-child(3)");
+    var $flightseats = $("#flightseats");
+    var $fsection;
+    var $frow;
+    var $fcol;
+    var i, j, k, l;
+
+    for(i = 0; i < 2; i += 1) {
+        $flightseats.append("<div class='fsection'></div>");
+        $fsection = $flightseats.children(":nth-child("+(i+1)+")");
+        for(j = 0; j < 4; j += 1) {
+            $fsection.append("<div class='frow'></div>");
+            $frow = $fsection.children(":nth-child("+(j+1)+")");
+            for(k = 0; k < 2; k += 1) {
+                $frow.append("<div class='fcol'></div>");
+                $fcol = $frow.children(":nth-child("+(k+1)+")");
+                for(l = 0; l < 9; l += 1) {
+                    $fcol.append("<div class='fseat'></div>");
+                    $fcol.children(":nth-child("+(l+1)+")").click(function() {
+                        $(".fseat").not(this).css("background","#00f");
+                        $(this).css("background","#f00");
+
+                        $section.children(":first").addClass("approved");
+                        $section.next().children(":first").addClass("enabled");
+                        $section.children(".nextbutton").css("visibility","visible");
+                    });
+                }
+            }
+        }
+    }
+}
+
+function firstSectionChange() {
+    var $section = $(".section:nth-child(1)");
+
     if($("#fromaddress").val() != "" && $("#toaddress").val() != "") {
-        $firstSection.children(":first").css("background",okColor);
-        $firstSection.next().children(":first").addClass("enabled");
-        $firstSection.children(".nextbutton").css("visibility","visible");
+        $(".section").children(":first").removeClass("approved")
+        $(".section").children(":first").removeClass("enabled");
+        $section.children(":first").addClass("approved");
+        $section.children(":first").addClass("enabled");
+        $section.next().children(":first").addClass("enabled");
+        $section.children(".nextbutton").css("visibility","visible");
     } else {
-        $firstSection.children(":first").css("background",todoColor);
-        $firstSection.next().children(":first").removeClass("enabled");
-        $firstSection.children(".nextbutton").css("visibility","hidden");
+        $section.children(":first").removeClass("approved");
+        $section.next().children(":first").removeClass("enabled");
+        $section.children(".nextbutton").css("visibility","hidden");
     }
 };

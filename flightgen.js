@@ -5,6 +5,16 @@ function main() {
 
 }
 
+/** Returns the whole shit as an object */
+function createRandomFlight() {
+    return flight = {
+        airline: airline(),
+        aircraft: aircraft(),
+        price: price(),
+        time: timesObject()
+    };
+}
+
 /** Returns the whole shit as a string */
 function flight(){
     var fTimes = times();
@@ -28,6 +38,29 @@ function times() {
     if(me < 10) me = "0"+me;
 
     return hs + ":" + ms + "-" + he + ":" + me;
+}
+
+/** Returns a random start and end time as an object */
+function timesObject() {
+    var hs = Math.floor(Math.random()*24);
+    if(hs < 10) hs = "0"+hs;
+    var ms = Math.floor(Math.random()*60);
+    if(ms < 10) ms = "0"+ms;
+    var he = (hs + Math.floor(Math.random()*16+1))%24;
+    if(he < 10) he = "0"+he;
+    var me = (ms + Math.floor(Math.random()*60+1))%60;
+    if(me < 10) me = "0"+me;
+
+    return {
+        start: {
+            h: hs,
+            m: ms
+        },
+        end: {
+            h: he,
+            m: me
+        }
+    };
 }
 
 /** Returns airline string */
