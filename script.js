@@ -8,7 +8,7 @@
  */
 
 var minimized = 35;
-var maximized = 450;
+var maximized = 500;
 
 var map;
 var geocoder;
@@ -20,11 +20,15 @@ var loadFunc;
 
 var okColor = "#37d2ac";
 var todoColor = "#ff8973";
+var selectionColor = "#84f4d8";
 
 var ultratravelUserData;
 
 var currentFlights;
 var selectedFlight = {};
+
+var currentHotels;
+var selectedHotel = {};
 
 $(document).ready(function() {
     var today = new Date();
@@ -112,6 +116,9 @@ $(document).ready(function() {
     }
 
     loadFunc();
+
+    // HOTELS
+    $("#hotels").hide();
 
     if (ultratravelUserData && ultratravelUserData.loggedin) {
         writeLoginInfo();
@@ -223,7 +230,31 @@ function gotoSection(number) {
 
     // if the flight section is selected
     if(number === 2) {
+        
         createFlights();
+    }
+
+    // if the boende section is selected
+    if(number === 4) {
+        if($section.children("p").children("input").attr("checked")) {
+            $section.children(".nextbutton").css("visibility","visible");
+            disableSectionsFrom(4, true);
+        }
+    }
+    
+    // if the betalning section is selected
+    if(number === 5){
+        $("#payment").html("<h2>" + selectedFlight.from + " - " + selectedFlight.to +"</h2>"+flight(selectedFlight));
+        var hotelPrice = 0;
+    
+        // Display a summary of the booking if hotel
+        if(!$section.prev().children("p").children("input").attr("checked")) {
+            $("#payment").append(hotelStay(selectedHotel));
+            hotelPrice = selectedHotel.price;
+        }
+
+        $("#payment").append("<div style='float:right'><h2>Totalt: "+(selectedFlight.price + hotelPrice)+":-</h2><input style='margin: 5px 30px 0 0; width: 100px;' type='button' value='Betala' onclick=\"alert('Konto tömt!')\" /></div>");
+        
     }
 
     $(".active_section").removeClass("active_section");
@@ -263,12 +294,13 @@ function createFlights() {
         }
         $(".flight").click(function() {
             $(".flight").not(this).css("background","#fff");
-            $(this).css("background","#aaa");
+            $(this).css("background",selectionColor);
             $section.children(":first").addClass("approved");
             $section.next().children(":first").addClass("enabled");
             $section.children(".nextbutton").css("visibility","visible");
 
             // save the flight
+            selectedFlight = currentFlights[$(".flight").index(this)];
             selectedFlight.from = from;
             selectedFlight.to = to;
 
@@ -339,4 +371,40 @@ function disableSectionsFrom(number, approved) {
         $(".section:nth-child("+number+")").children("h1").addClass("approved");
     }
     $(".section:gt("+number+")").children("h1").removeClass("enabled");
+    $(".section:gt("+(number-1)+")").children(".nextbutton").css("visibility","hidden");
+}
+
+// updates the boende section
+function updateBoende(checked) {
+    var $section = $(".section:nth-child(4)");
+    var $hotels = $("#hotels");
+
+    if(checked) {
+        disableSectionsFrom(4, true);
+        $hotels.hide();
+        $section.children(".nextbutton").css("visibility","visible");
+    } else {
+        disableSectionsFrom(4, false);
+
+        $section.children(".nextbutton").css("visibility","hidden");
+        $hotels.html("");
+        
+        currentHotels = new Array(4);
+        for(i = 0; i<currentHotels.length; i+=1){
+            currentHotels[i] = createRandomHotel();
+            $hotels.append(hotelStay(currentHotels[i]));
+            $hotels.children(":nth-child("+(i+1)+")").click(function() {
+                $hotels.children("p").not(this).css("background","#fff");
+                $(this).css("background",selectionColor);
+
+                $section.children(":first").addClass("approved");
+                $section.next().children(":first").addClass("enabled");
+                $section.children(".nextbutton").css("visibility","visible");
+
+                selectedHotel = currentHotels[$hotels.children("p").index(this)];
+            });
+        }
+        
+        $hotels.show();
+    }
 }

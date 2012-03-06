@@ -7,7 +7,7 @@ function main() {
 
 /** Returns the whole shit as an object */
 function createRandomFlight() {
-    return flight = {
+    return {
         airline: airline(),
         aircraft: aircraft(),
         price: price(),
@@ -16,28 +16,15 @@ function createRandomFlight() {
 }
 
 /** Returns the whole shit as a string */
-function flight(){
-    var fTimes = times();
-    var fAirline = airline();
-    var fCraft = aircraft();
-    var fPrice = price();
+function flight(flight){
 
-    var alles = "Time: " + fTimes + "<br>Airline: " + fAirline + "<br>Aircraft: " + fCraft + "<br>Price: " + fPrice +":-";
+    var alles = "<p>Tid: " + times(flight.time) + "<br />Flygbolag: " + flight.airline + "<br />Flygplanstyp: " + flight.aircraft + "<br />Pris: <b>" + flight.price +":-</b></p>";
     return alles;
 }
 
 /** Returns a random start and end time as a string */
-function times() {
-    var hs = Math.floor(Math.random()*24);
-    if(hs < 10) hs = "0"+hs;
-    var ms = Math.floor(Math.random()*60);
-    if(ms < 10) ms = "0"+ms;
-    var he = (hs + Math.floor(Math.random()*16+1))%24;
-    if(he < 10) he = "0"+he;
-    var me = (ms + Math.floor(Math.random()*60+1))%60;
-    if(me < 10) me = "0"+me;
-
-    return hs + ":" + ms + "-" + he + ":" + me;
+function times(t) {
+    return t.start.h + ":" + t.start.m + "-" + t.end.h + ":" + t.end.m;
 }
 
 /** Returns a random start and end time as an object */

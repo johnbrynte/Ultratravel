@@ -13,15 +13,19 @@
 <script type="text/javascript" src="flightgen.js"></script>
 <script type="text/javascript" src="script.js"></script>
 <script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="hotelgen.js"></script>
 </head>
 <body>
 
+
 <div id="menu">
-<img id="logo" src="ultratravel_sidelogo.png" />
+<marquee BEHAVIOR=SLIDE scrollamount=30><img id="logo" src="ultratravel_sidelogo.png" />
 <img id="earth" src="earth_turn.gif" />
     <div id="login">
     </div>
+    </marquee>
 </div>
+
 
 <div id="map_canvas"></div>
 
@@ -30,6 +34,7 @@
     <div id="booking">
         <div class="section">
             <h1>Destination</h1>
+            <h2>Välj din destination</h2>
             <h3>Från:
             <input id="fromaddress" type="text" value="" /></h3>
             <h3>Till:
@@ -65,11 +70,17 @@
         <div class="section">
             <h1>Boende</h1>
             <h2>Var vill du bo?</h2>
+            <p><input type="checkbox" checked="checked" onclick="updateBoende(this.checked)" />
+            Eget boende</p>
+            <div id="hotels">
+            </div>
+            <input class="nextbutton" type="button" value="nästa" onclick="gotoSection(5)" />
         </div>
 
         <div class="section">
             <h1>Betalning</h1>
-            <h2>Hur vill du betala?</h2>
+            <div id="payment">
+            </div>
         </div>
     </div>
 </div>
