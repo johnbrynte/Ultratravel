@@ -4,6 +4,7 @@
  * Script.js
  * @author John Brynte Turesson
  * @author Anton Erholt
+ * @author Daniel Molin
  */
 
 var minimized = 35;
