@@ -44,7 +44,7 @@ function attemptLogin() {
             '</div>');
     $('#login_menu input').hide();
 
-    $('#login').append('<p><b>Inloggad som: </b>'+ultratravelUserData.username+'</p>');
+    $('#login').append('<p><b>Inloggad som: </b>' + ultratravelUserData.username + '</p>');
 }
 
 
