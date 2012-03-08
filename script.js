@@ -8,7 +8,7 @@
  */
 
 var minimized = 35;
-var maximized = 500;
+var maximized = 550;
 
 var map;
 var geocoder;
@@ -60,7 +60,7 @@ $(document).ready(function() {
             styles: [{
                 featureType: "all",
                 stylers: [
-                    { hue: "#ffc890" },
+                    { hue: "#e6d1bc" },
                     {  lightness: "25" }
                 ]
             }]
