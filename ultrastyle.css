@@ -261,7 +261,7 @@ h1 {
     width: 16px;
     height: 16px;
     margin: 0 6px 0 0;
-    background: #aaf;
+    background: #84f4d8;
     border-radius: 8px;
     display: inline-block;
     cursor: pointer;
@@ -272,7 +272,7 @@ h1 {
 }
 
 .noseat {
-    background: #ff8973;
+    background: #ffb68a;
     cursor: default !important;
 }
 
