@@ -30,10 +30,13 @@ var selectedFlight = {};
 var currentHotels;
 var selectedHotel = {};
 
+var online = true;
+
 var flightmovement = 0;
 var flightstep;
 
 $(document).ready(function() {
+
     var today, month, date, todayString, $sectionHeaders,myOptions, fa, ta;
 
     today = new Date();
@@ -47,33 +50,42 @@ $(document).ready(function() {
     flightsteps = 93;
 
     // GOOGLE MAPZ
-    myOptions = {
-        disableDefaultUI: true,
-        scrollwheel: false,
-        center: new google.maps.LatLng(50, 0),
-        zoom: 3,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        styles: [{
-            featureType: "all",
-            stylers: [
-                { hue: "#ffc890" },
-                {  lightness: "25" }
-            ]
-        }]
-    };
+    if (online) {
+        myOptions = {
+            disableDefaultUI: true,
+            scrollwheel: false,
+            center: new google.maps.LatLng(50, 0),
+            zoom: 3,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: [{
+                featureType: "all",
+                stylers: [
+                    { hue: "#ffc890" },
+                    {  lightness: "25" }
+                ]
+            }]
+        };
+
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        geocoder = new google.maps.Geocoder();
+    }
+
+
 
     // initialize sections
     $(".section").not("first-child").height(minimized);
     $(".section:first-child").height(maximized);
     disableSectionsFrom(1, false);
     $(".section:first-child").children("h1").addClass("active_section");
+    $(".section").not(":first-child").children("input").css("visibility","hidden");
+    $(".section").not(":first-child").children().children("input").css("visibility","hidden");
 
     // set default section header color
     $(".section > h1").css("background",todoColor);
 
     // set the click event handler for each section
-    $sectionHeaders.click(function() {
-        if($(this).is(".enabled")) { // literally, baby!!!
+    $sectionHeaders.click(function () {
+        if ($(this).is(".enabled")) { // literally, baby!!!
             gotoSection($(".section").index($(this).parent())+1);
         }
     });
@@ -83,12 +95,10 @@ $(document).ready(function() {
 
     // CALENDAR
     $("#arrival").val(todayString);
-    $("#departure").val(todayString)
+    $("#departure").val(todayString);
 
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    geocoder = new google.maps.Geocoder();
-
+    // ARRIVAL AND DEPARTURE
     // Key press in section 1
     fa = $("#fromaddress");
     ta = $("#toaddress");
@@ -104,6 +114,7 @@ $(document).ready(function() {
     fa.keypress(function(event) {
         if (event.which === 13) { // check if enter was pressed
             codeAddress(0, $(this).attr("value"), null);
+
         }
     });
     ta.keypress(function(event) {
@@ -133,65 +144,35 @@ $(document).ready(function() {
     // Set the focus to the "from" text field
     fa.focus();
 
-    // LOGIN
-    if (typeof(Storage)!=="undefined") {
-        saveFunc = saveDataLocal;
-        loadFunc = loadDataLocal;
-    } else {
-        saveFunc = saveDataCookie;
-    }
-
-    loadFunc();
 
     // HOTELS
     $("#hotels").hide();
 
-    if (ultratravelUserData && ultratravelUserData.loggedin) {
-        writeLoginInfo();
+    // LOGIN
+    if (typeof (Storage) !=="undefined") {
+        saveFunc = saveDataLocal;
+        loadFunc = loadDataLocal;
     } else {
-        $('#login').append('<div id="login_popup">'
-            + '<span>Anv&auml;ndarnamn: <input id="login_username" type="text" /></span>'
-            + '<span>L&ouml;senord: <input id="login_password" type="password" /></span>'
-            + '</div>');
+        saveFunc = saveDataCookie; // TODO -- NAATH!
+    }
 
-        $('#loginbutton').click(function() {
-            ultratravelUserData = new UserData();
-            ultratravelUserData.loggedin = true;
-            ultratravelUserData.username = $('#login_username').val();
-            ultratravelUserData.password = $('#login_password').val();
-            if (ultratravelUserData.username === '' || ultratravelUserData.password === '') { 
-                alert('Var vänlig fyll i användarnamn och lösenord.');
-                return;
-            }
+    loadFunc();
 
-            $('#login_popup').remove();
-            $('#login').append('<div id="login_menu">' +
-                    '<input id="saveUser" type="button" value="Spara" />' +
-                    '<input id="forgetUser" type="button" value="Glöm" />' +
-                    '</div>');
+    if (ultratravelUserData && ultratravelUserData.loggedin) {
+//        $('#departure').val(ultratravelUserData.getLatestTravel) // BEGIN HERE!
+    } else {
+        $('#login').append('<div id="login_popup">' +
+            '<span>Anv&auml;ndarnamn: <input id="login_username" type="text" /></span>' +
+            '<span>L&ouml;senord: <input id="login_password" type="password" /></span>' +
+            '</div>');
 
-            writeLoginInfo();
+        $('#loginbutton').click(function () {
+            attemptLogin();
         });
 
-        $('#login_password').keypress(function(evt) {
+        $('#login_password').keypress(function (evt) {
             if (evt.which === 13) {
-                ultratravelUserData = new UserData();
-                ultratravelUserData.loggedin = true;
-                ultratravelUserData.username = $('#login_username').val();
-                ultratravelUserData.password = $('#login_password').val();
-                if (ultratravelUserData.username === '' || ultratravelUserData.password === '') {
-                    alert('Var vänlig fyll i användarnamn och lösenord.');
-                    return;
-                }
-
-                $('#login_popup').remove();
-                $('#login').append('<div id="login_menu">' +
-                        '<input id="saveUser" type="button" value="Spara" />' +
-                        '<input id="forgetUser" type="button" value="Glöm" />' +
-                        '</div>');
-                $('#login_menu input').hide();
-
-                writeLoginInfo();
+                attemptLogin();
             }
         });
     }
@@ -201,19 +182,19 @@ $(document).ready(function() {
 function codeAddress(index, address, func) {
     var markerIcon, markerShadow, p1, p2;
 
-    geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
+    geocoder.geocode( { 'address': address}, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
             if (markers[index]) {
                 markers[index].setMap(null);
             }
 
             // Make a nice marker yeah
-            var markerIcon = new google.maps.MarkerImage('images/marker_mint_s.png',
+            markerIcon = new google.maps.MarkerImage('images/marker_mint_s.png',
             new google.maps.Size(31,40),    // Size
             new google.maps.Point(0,0),    // Origin
             new google.maps.Point(16,40));    // Anchor
 
-            var markerShadow = new google.maps.MarkerImage('images/marker_shadow_s.png',
+            markerShadow = new google.maps.MarkerImage('images/marker_shadow_s.png',
             new google.maps.Size(45,31),
             new google.maps.Point(0,0),
             new google.maps.Point(16,31));
@@ -324,12 +305,20 @@ function gotoSection(number) {
     $(".active_section").removeClass("active_section");
     $section.children("h1").addClass("active_section");
 
+    $(".section").not($section).children("input").css("visibility","hidden");
+    $(".section").not($section).children().children("input").css("visibility","hidden");
+    $section.children("input").css("visibility","visible");
+    $section.children().children("input").css("visibility","visible");
+    if (!$section.children("h1").is(".approved")) {
+        $section.children(".nextbutton").css("visibility","hidden");
+    }
+
     expand = {};
-    expand["height"] = maximized;
+    expand.height = maximized;
     $section.animate(expand, 300, null);
 
     collapse = {};
-    collapse["height"] = minimized;
+    collapse.height = minimized;
     $(".section").not($section).animate(collapse, 300, null);
 
     // Hide calendar
@@ -399,8 +388,8 @@ function createFlights() {
 
 function generateFlightSeats() {
     var $section, $flightseats, $fsection, $frow, $fcol, i, j, k, l, fn;
-    var $section = $(".section:nth-child(3)");
-    var $flightseats = $("#flightseats");
+    $section = $(".section:nth-child(3)");
+    $flightseats = $("#flightseats");
 
     fn = function () {
         if (!$(this).is(".noseat")) {
@@ -441,7 +430,7 @@ function firstSectionChange() {
     } else {
         disableSectionsFrom(1, false);
     }
-};
+}
 
 function disableSectionsFrom(number, approved) {
     var $section = $(".section:nth-child("+number+")");
@@ -485,7 +474,7 @@ function updateBoende(checked) {
         $hotels.html("");
 
         currentHotels = new Array(4);
-        for (i = 0; i<currentHotels.length; i+=1){
+        for (i = 0; i<currentHotels.length; i+=1) {
             currentHotels[i] = createRandomHotel();
             $hotels.append(hotelStay(currentHotels[i]));
             $hotels.children(":nth-child("+(i+1)+")").click(fn);
