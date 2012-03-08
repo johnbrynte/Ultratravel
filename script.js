@@ -67,6 +67,8 @@ $(document).ready(function() {
     $(".section:first-child").height(maximized);
     disableSectionsFrom(1, false);
     $(".section:first-child").children("h1").addClass("active_section");
+    $(".section").not(":first-child").children("input").css("visibility","hidden");
+    $(".section").not(":first-child").children().children("input").css("visibility","hidden");
 
     // set default section header color
     $(".section > h1").css("background",todoColor);
@@ -315,6 +317,14 @@ function gotoSection(number) {
 
     $(".active_section").removeClass("active_section");
     $section.children("h1").addClass("active_section");
+
+    $(".section").not($section).children("input").css("visibility","hidden");
+    $(".section").not($section).children().children("input").css("visibility","hidden");
+    $section.children("input").css("visibility","visible");
+    $section.children().children("input").css("visibility","visible");
+    if (!$section.children("h1").is(".approved")) {
+        $section.children(".nextbutton").css("visibility","hidden");
+    }
 
     expand = {};
     expand["height"] = maximized;
