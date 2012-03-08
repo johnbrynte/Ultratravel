@@ -159,7 +159,7 @@ h1 {
 
 .section p {
     font-size: 1em;
-    margin: 0px 30px 20px 30px;
+    margin: 0px 20px 20px 30px;
 }
 
 .linktosection {
@@ -192,11 +192,55 @@ h1 {
 }
 
 #flights p {
-    margin: 5px 0 5px 30px;
+    margin: 5px 20px 5px 30px;
 }
 
 .flight:hover {
     background: #84f4d8 !important;
+}
+
+#flightlinks {
+    height: 300px;
+    padding: 15px 0 0 0;
+    overflow: hidden;
+    position: relative;
+}
+
+#flightlinksmove {
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    top: 16px;
+}
+
+#flightarrowup {
+    width: 450px;
+    height: 15px;
+    margin: 0 0 0 30px !important;
+    background: #ddd;
+    text-align: center;
+    border: 1px solid #aaa;
+    position: absolute;
+    top: 0px;
+}
+
+#flightarrowdown {
+    width: 450px;
+    height: 15px;
+    margin: 0 0 0 30px !important;
+    background: #ddd;
+    text-align: center;
+    border: 1px solid #aaa;
+    position: absolute;
+    bottom: 0px;
+}
+
+#flightarrowup:hover {
+    background: #84f4d8;
+}
+
+#flightarrowdown:hover {
+    background: #84f4d8;
 }
 
 .fsection {

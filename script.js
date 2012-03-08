@@ -30,6 +30,9 @@ var selectedFlight = {};
 var currentHotels;
 var selectedHotel = {};
 
+var flightmovement = 0;
+var flightstep;
+
 $(document).ready(function() {
     var today, month, date, todayString, $sectionHeaders,myOptions, fa, ta;
 
@@ -40,6 +43,8 @@ $(document).ready(function() {
         ((month<9) ? "0" + (month+1) : month + 1 ) + "/" +
         ((date<10) ? "0" + date : date ) + " 13:37";
     $sectionHeaders = $(".section > h1");
+
+    flightsteps = 93;
 
     // GOOGLE MAPZ
     myOptions = {
@@ -104,13 +109,17 @@ $(document).ready(function() {
         if (event.which !== 13) {
             $(this).removeClass("invalid");
         }
-        firstSectionChange();
+        if(event.keyCode >= 32) {
+            firstSectionChange();
+        }
     });
     ta.keyup(function(event) {
         if (event.which !== 13) {
             $(this).removeClass("invalid");
         }
-        firstSectionChange();
+        if(event.keyCode >= 32) {
+            firstSectionChange();
+        }
     });
 
     // Set the focus to the "from" text field
@@ -320,19 +329,36 @@ function gotoSection(number) {
 }
 
 function createFlights() {
-    var $flights, $section, $seats, from, to;
+    var $flights, $flightlinks, $flightlinksmove, $section, $seats, from, to;
     $flights = $("#flights");
     $section = $(".section:nth-child(2)");
     $seats = $(".fseat");
     from = $("#fromaddress").val();
     to = $("#toaddress").val();
 
-    $flights.html('<p>Visar flights från <b>'+from+'</b> till <b>'+to+'</b></p>');
+    $flights.html('<p>Visar flights från <b>'+from+'</b> till <b>'+to+'</b></p><div id="flightlinks"><div id="flightlinksmove"></div><p id="flightarrowup">^</p><p id="flightarrowdown">V</p></div>');
+    $flightlinks = $("#flightlinks");
+    $flightlinksmove = $("#flightlinksmove");
 
-    currentFlights = new Array(3);
+    $("#flightarrowup").click(function () {
+        flightmovement += 1;
+        if(flightmovement > 0) {
+            flightmovement = 0;
+        }
+        $flightlinksmove.css("top", (flightmovement*flightsteps+16)+"px");
+    });
+    $("#flightarrowdown").click(function () {
+        flightmovement -= 1;
+        if(flightmovement < -9) {
+            flightmovement = -9;
+        }
+        $flightlinksmove.css("top", (flightmovement*flightsteps+16)+"px");
+    });
+
+    currentFlights = new Array(12);
     for (i = 0; i < currentFlights.length; i ++) {
         currentFlights[i] = createRandomFlight();
-        $flights.append('<p class="flight">'
+        $flightlinksmove.append('<p class="flight">'
             +currentFlights[i].time.start.h+':'+currentFlights[i].time.start.m
             +' - '+currentFlights[i].time.end.h+':'+currentFlights[i].time.end.m
             +'<br/>'+currentFlights[i].airline
@@ -340,6 +366,7 @@ function createFlights() {
             +'<br/>'+currentFlights[i].price+':-'
             +'</p>');
     }
+
     $(".flight").click(function() {
         $(".flight").not(this).css("background","#fff");
         $(this).css("background",selectionColor);
