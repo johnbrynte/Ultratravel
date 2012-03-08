@@ -92,6 +92,14 @@ $(document).ready(function() {
     // Key press in section 1
     fa = $("#fromaddress");
     ta = $("#toaddress");
+   
+    // Tabbing away from it!
+    fa.blur(function() {
+        codeAddress(0, $(this).attr("value"), null);
+    });
+    ta.blur(function() {
+        codeAddress(1, $(this).attr("value"), null);
+    });
 
     fa.keypress(function(event) {
         if (event.which === 13) { // check if enter was pressed
