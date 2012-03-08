@@ -30,6 +30,8 @@ var selectedFlight = {};
 var currentHotels;
 var selectedHotel = {};
 
+var online = false;
+
 $(document).ready(function () {
     var today, month, date, todayString, $sectionHeaders,myOptions, fa, ta;
 
@@ -42,20 +44,27 @@ $(document).ready(function () {
     $sectionHeaders = $(".section > h1");
 
     // GOOGLE MAPZ
-    myOptions = {
-        disableDefaultUI: true,
-        scrollwheel: false,
-        center: new google.maps.LatLng(50, 0),
-        zoom: 3,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        styles: [{
-            featureType: "all",
-            stylers: [
-                { hue: "#ffc890" },
-                {  lightness: "25" }
-            ]
-        }]
-    };
+    if (online) {
+        myOptions = {
+            disableDefaultUI: true,
+            scrollwheel: false,
+            center: new google.maps.LatLng(50, 0),
+            zoom: 3,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: [{
+                featureType: "all",
+                stylers: [
+                    { hue: "#ffc890" },
+                    {  lightness: "25" }
+                ]
+            }]
+        };
+
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        geocoder = new google.maps.Geocoder();
+    }
+
+
 
     // initialize sections
     $(".section").not("first-child").height(minimized);
@@ -80,19 +89,16 @@ $(document).ready(function () {
     $("#arrival").val(todayString);
     $("#departure").val(todayString);
 
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    geocoder = new google.maps.Geocoder();
-
-    // FORM
+    // ARRIVAL AND DEPARTURE
     fa = $("#fromaddress");
     ta = $("#toaddress");
     fa.keypress(function (event) {
-        if (event.which === 13) { // check if enter was pressed
+        if (event.which === 13 && online) { // check if enter was pressed
             codeAddress(0, $(this).attr("value"));
         }
     }).focusout(function () {
-        if (fa.val() !== '') {
+        if (fa.val() !== '' && online) {
             codeAddress(0, $(this).attr("value"));
         }
     });
@@ -119,21 +125,22 @@ $(document).ready(function () {
     // Set the focus to the "from" text field
     fa.focus();
 
+
+    // HOTELS
+    $("#hotels").hide();
+
     // LOGIN
     if (typeof (Storage) !=="undefined") {
         saveFunc = saveDataLocal;
         loadFunc = loadDataLocal;
     } else {
-        saveFunc = saveDataCookie;
+        saveFunc = saveDataCookie; // TODO -- NAATH!
     }
 
     loadFunc();
 
-    // HOTELS
-    $("#hotels").hide();
-
     if (ultratravelUserData && ultratravelUserData.loggedin) {
-        writeLoginInfo();
+//        $('#departure').val(ultratravelUserData.getLatestTravel) // BEGIN HERE!
     } else {
         $('#login').append('<div id="login_popup">' +
             '<span>Anv&auml;ndarnamn: <input id="login_username" type="text" /></span>' +
@@ -141,43 +148,12 @@ $(document).ready(function () {
             '</div>');
 
         $('#loginbutton').click(function () {
-            ultratravelUserData = new UserData();
-            ultratravelUserData.loggedin = true;
-            ultratravelUserData.username = $('#login_username').val();
-            ultratravelUserData.password = $('#login_password').val();
-            if (ultratravelUserData.username === '' || ultratravelUserData.password === '') {
-                alert('Var vänlig fyll i användarnamn och lösenord.');
-                return;
-            }
-
-            $('#login_popup').remove();
-            $('#login').append('<div id="login_menu">' +
-                    '<input id="saveUser" type="button" value="Spara" />' +
-                    '<input id="forgetUser" type="button" value="Glöm" />' +
-                    '</div>');
-
-            writeLoginInfo();
+            attemptLogin();
         });
 
         $('#login_password').keypress(function (evt) {
             if (evt.which === 13) {
-                ultratravelUserData = new UserData();
-                ultratravelUserData.loggedin = true;
-                ultratravelUserData.username = $('#login_username').val();
-                ultratravelUserData.password = $('#login_password').val();
-                if (ultratravelUserData.username === '' || ultratravelUserData.password === '') {
-                    alert('Var vänlig fyll i användarnamn och lösenord.');
-                    return;
-                }
-
-                $('#login_popup').remove();
-                $('#login').append('<div id="login_menu">' +
-                        '<input id="saveUser" type="button" value="Spara" />' +
-                        '<input id="forgetUser" type="button" value="Glöm" />' +
-                        '</div>');
-                $('#login_menu input').hide();
-
-                writeLoginInfo();
+                attemptLogin();
             }
         });
     }
