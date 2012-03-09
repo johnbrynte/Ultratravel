@@ -33,7 +33,7 @@ h1 {
     width: 100%;
     height: 65px;
     position: absolute;
-    background: url("ultratravel_bg.png");
+    background: url("images/ultratravel_bg.png");
 }
 
 #logo {
@@ -46,6 +46,7 @@ h1 {
 }
 
 #login {
+    width: 650px;
     margin: 17px 0px 0px 380px;
     position: relative;
 }
@@ -221,34 +222,30 @@ h1 {
     top: 16px;
 }
 
-#flightarrowup {
+.flightarrowup {
     width: 450px;
     height: 15px;
     margin: 0 0 0 30px !important;
-    background: #ddd;
+    background: url("images/arrowup.png") no-repeat 50% 50% #ddd;
     text-align: center;
     border: 1px solid #aaa;
     position: absolute;
     top: 0px;
 }
 
-#flightarrowdown {
+.flightarrowdown {
     width: 450px;
     height: 15px;
     margin: 0 0 0 30px !important;
-    background: #ddd;
+    background: url("images/arrowdown.png") no-repeat 50% 50% #ddd;
     text-align: center;
     border: 1px solid #aaa;
     position: absolute;
     bottom: 0px;
 }
 
-#flightarrowup:hover {
-    background: #84f4d8;
-}
-
-#flightarrowdown:hover {
-    background: #84f4d8;
+.arrowselected {
+    background-color: #84f4d8 !important;
 }
 
 .fsection {
