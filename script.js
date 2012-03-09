@@ -333,23 +333,46 @@ function createFlights() {
     from = $("#fromaddress").val();
     to = $("#toaddress").val();
 
-    $flights.html('<p>Visar flights från <b>'+from+'</b> till <b>'+to+'</b></p><div id="flightlinks"><div id="flightlinksmove"></div><p id="flightarrowup">^</p><p id="flightarrowdown">V</p></div>');
+    $flights.html('<p>Visar flights från <b>'+from+'</b> till <b>'+to+'</b></p><div id="flightlinks"><div id="flightlinksmove"></div><div class="flightarrowup"></div><div class="flightarrowdown"></div></div>');
     $flightlinks = $("#flightlinks");
     $flightlinksmove = $("#flightlinksmove");
 
-    $("#flightarrowup").click(function () {
+    $(".flightarrowdown").css("background-color","#fff");
+
+    $(".flightarrowup").click(function () {
         flightmovement += 1;
-        if(flightmovement > 0) {
+        if(flightmovement >= 0) {
             flightmovement = 0;
+            $(this).css("background-color","#ddd");
+        } else {
+            $(this).css("background-color","#fff");
+            $(".flightarrowdown").css("background-color","#fff");
         }
         $flightlinksmove.css("top", (flightmovement*flightsteps+16)+"px");
+    }).hover(
+    function () {
+        $(this).addClass("arrowselected");
+    },
+    function () {
+        $(this).removeClass("arrowselected");
     });
-    $("#flightarrowdown").click(function () {
+
+    $(".flightarrowdown").click(function () {
         flightmovement -= 1;
-        if(flightmovement < -9) {
+        if(flightmovement <= -9) {
             flightmovement = -9;
+            $(this).css("background-color","#ddd");
+        } else {
+            $(this).css("background-color","#fff");
+            $(".flightarrowup").css("background-color","#fff");
         }
         $flightlinksmove.css("top", (flightmovement*flightsteps+16)+"px");
+    }).hover(
+    function () {
+        $(this).addClass("arrowselected");
+    },
+    function () {
+        $(this).removeClass("arrowselected");
     });
 
     currentFlights = new Array(12);
